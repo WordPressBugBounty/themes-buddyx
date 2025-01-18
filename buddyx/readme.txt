@@ -2,7 +2,7 @@
 Contributors: wbcomdesigns
 Tags: translation-ready, Block Editor Styles, Blog, Custom Background, Custom Colors, Custom Logo, Custom Menu, Editor Style, Featured Images, Footer Widgets, Full Width Template, One Column, RTL Language Support, Sticky Post, Theme Options, Threaded Comments, Wide Blocks, BuddyPress, Post Formats, Education, E-Commerce, News
 Requires at least: 4.8
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 7.4
 Stable tag: trunk
 License: GNU General Public License v3.0 (or later)
@@ -97,6 +97,12 @@ Copyright 2013 Klaus Hartl
 Released under the MIT license
 
 == Changelog ==
+
+= 4.7.7 = 
+* Updated: Managed BuddyWoo order tab pagination UI with Youzify compatibility.  
+* Updated: Improved UI for BuddyWoo tabs with Youzify integration.  
+* Updated: Resizable text areas for better user experience.  
+* Updated: Enhanced `members-loop.php` to align with BuddyBoss Platform updates.  
 
 = 4.7.6 =
 * Fixed issue with `content.min.css` being called twice.
