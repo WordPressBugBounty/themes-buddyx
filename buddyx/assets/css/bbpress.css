@@ -157,6 +157,7 @@ a.bbp-topic-permalink {
 
 #bbpress-forums #bbp-search-form>div {
     display: flex;
+    gap: 10px;
 }
 
 @media only screen and (max-width: 767px) {
@@ -243,6 +244,14 @@ body .select2-container .select2-dropdown.bb-tag-list-dropdown.bb-tag-list-dropd
     padding: 0 10px;
 }
 
+#bbpress-forums fieldset.bbp-form input[type="password"],
+#bbpress-forums fieldset.bbp-form input[type="text"], 
+#bbpress-forums fieldset.bbp-form select {
+    width: 100%;
+    padding: 10px;
+    min-height: 38px;
+}
+
 /*--------------------------------------------------------------
 # Activity Page
 --------------------------------------------------------------*/
@@ -253,7 +262,6 @@ body .select2-container .select2-dropdown.bb-tag-list-dropdown.bb-tag-list-dropd
     padding: 0;
     border: 0;
 }
-
 
 /*--------------------------------------------------------------
 # Widgets

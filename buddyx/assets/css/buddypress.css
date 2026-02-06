@@ -47,6 +47,7 @@
     # BP Attachments
     # BuddyPress Member Review
     # BuddyPress Member Blog
+    # BP Better Messages
 
 --------------------------------------------------------------*/
 
@@ -405,6 +406,11 @@ body:not(.round-avatars) .grid .member-status {
 @media screen and (max-width: 46.8em) {
     .buddypress-wrap:not(.bp-single-vert-nav) .bp-navs:not(.bp-subnavs) li {
         background: #f5f5f5;
+    }
+
+    .buddypress-wrap .subnav-filters div#activity-filter-select,
+    .buddypress-wrap .subnav-filters .select-wrap {
+        width: 100%;
     }
 }
 
@@ -1983,6 +1989,14 @@ li.load-more a.loading::after {
     width: auto;
 }
 
+.buddypress-wrap .members-list li .user-update {
+    font-size: inherit;
+}
+
+.bp-list.members-list:not(.grid) li .item .item-block {
+    float: none;
+}
+
 @media screen and (min-width: 46.8em) {
     .bp-list:not(.grid) li .item .item-block {
         float: left;
@@ -2756,6 +2770,15 @@ body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning {
     background: transparent;
 }
 
+#bp-messages-next-page,
+#bp-messages-prev-page {
+    margin-right: 10px;
+}
+
+.buddypress-wrap .bp-messages-filters ul li #bp-messages-next-page::before,
+.buddypress-wrap .bp-messages-filters ul li #bp-messages-prev-page::before {
+    content: none;
+}
 
 /* notifications */
 
@@ -5590,6 +5613,9 @@ body.bmpro_moderation_content .member-home aside {
     }
 }
 
+#bmpro-blocked-template {
+    min-height: calc(100vh - 236px);
+}
 
 /*--------------------------------------------------------------
 ## BuddyPress Status
@@ -5949,6 +5975,13 @@ body.personal.attachments #bp-media-library .media-toolbar-primary .components-s
 --------------------------------------------------------------*/
 .bupr-shortcode-top-members-contents {
     margin: 0 0 2rem;
+}
+
+/*--------------------------------------------------------------
+## BP Better Messages
+--------------------------------------------------------------*/
+.contexify {
+    z-index: 9999 !important;
 }
 
 /*--------------------------------------------------------------
