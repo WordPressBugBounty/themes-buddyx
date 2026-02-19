@@ -24,6 +24,7 @@
 # Live Notification
 # Network Search
 # Activity Link Preview
+# Buddyboss Share
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
@@ -395,6 +396,11 @@ img.emojioneemoji {
     height: 18px !important;
 }
 
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-elements-buttons-item.post-emoji {
+    display: flex;
+    align-items: center;
+}
+
 .activity-update-form #whats-new-avatar {
     padding: 0;
 }
@@ -539,6 +545,10 @@ img.emojioneemoji {
     background-repeat: no-repeat;
     margin: 15px 0;
     max-width: 100%;
+}
+
+#buddypress .gif-image-remove.gif-image-overlay .bb-icon-times{
+    font-size: inherit;
 }
 
 .bb-media-info-section .activity-comments form {
@@ -730,6 +740,53 @@ form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
     border-radius: 0 0 var(--global-border-radius) var(--global-border-radius);
 }
 
+.activity-list .has-featured-image .bb-activity-more-options-wrap {
+    top: 202px;
+}
+
+/* Poll */
+.bb-poll-form .bb-poll_option_draggable:hover .bb-poll-edit-option_remove {
+    right: -10px;
+}
+
+/* Schedule Post */
+#buddypress .bb-schedule-post_dropdown_section .bb-model-footer .button.button-outline {
+    margin-right: 6px;
+}
+
+.schedule-posts-content .activity-list.bp-list .activity-item {
+    padding: 1rem;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head {
+    margin-bottom: 15px;
+}
+
+.schedule-posts-content .activity-list .activity-item .activity-title,
+.schedule-posts-content .activity-list .activity-item .activity-content .activity-inner {
+    padding: 0;
+}
+
+/* Gif */
+@media screen and (max-width: 580px) {
+    #whats-new-form-placeholder #whats-new-toolbar .post-gif .gif-media-search-dropdown, #whats-new-form #whats-new-toolbar .post-gif .gif-media-search-dropdown {
+        left: unset;
+        transform: translateX(-50%);
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .ac-reply-toolbar .post-gif .gif-media-search-dropdown {
+        left: unset;
+        transform: translateX(-65%);
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .activity-comments > .ac-form .ac-reply-toolbar .post-gif .gif-media-search-dropdown {
+        transform: translateX(-40%);
+    }
+}
 
 /*--------------------------------------------------------------
 # Members Directory
@@ -1996,6 +2053,10 @@ label.bp-group-message-label {
     margin-top: 1rem;
 }
 
+.bp-manage-group-container .bs-styled-checkbox + label::before {
+    margin-bottom: 10px;
+}
+
 /*--------------------------------------------------------------
 # Sidebar Widegts
 --------------------------------------------------------------*/
@@ -2095,8 +2156,6 @@ label.bp-group-message-label {
 /*--------------------------------------------------------------
 # Forums
 --------------------------------------------------------------*/
-
-
 #bbpress-forums .bp-pagination.top {
     display: block;
     clear: both;
@@ -2254,6 +2313,13 @@ ul.bbp-stats .bbp-count {
     font-size: 20px;
 }
 
+@media only screen and (max-width: 480px) {
+    #bbpress-forums div.bbp-reply-author img.avatar {
+        position: static;
+        width: auto;
+        height: auto;
+    }
+}
 
 /*--------------------------------------------------------------
 # Documents
@@ -2999,4 +3065,22 @@ body.admin-bar.bp-search .bp-search-ac {
 
 .activity-link-preview-container:hover .activity-link-preview-image::before {
     border-radius: var(--global-border-radius) var(--global-border-radius) 0 0;
+}
+
+/*--------------------------------------------------------------
+# Buddyboss Share
+--------------------------------------------------------------*/
+body {
+    --bb-sharing-background-white-color: var(--color-theme-white-box);
+    --bb-sharing-background-secondary-hover-color: var(--global-body-lightcolor);
+    --bb-sharing-text-color: var(--global-font-color);
+    --bb-sharing-text-regular-color: var(--global-font-color);
+    --bb-sharing-icon-color: var(--global-font-color);
+    --bb-sharing-text-secondary-color: var(--global-title-color);
+    --bb-sharing-border-color: var(--global-border-color);
+    --bb-sharing-radius-lg: var(--global-border-radius);
+}
+
+.buddyboss-share-dropdown {
+    margin-top: -24px;
 }

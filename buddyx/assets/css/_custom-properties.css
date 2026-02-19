@@ -8,8 +8,8 @@
 :root {
     --global-font-color: #505050;
     --global-font-family: "Open Sans", serif;
-    --global-font-size: 14;
-    --global-font-line-height: 1.4;
+    --global-font-size: 16;
+    --global-font-line-height: 1.6;
     --highlight-font-family: "Open Sans", "Helvetica Neue", "Arial Narrow", sans-serif;
     --content-width: 100%;
     --dropdown-symbol-width: 0.7em;
@@ -54,8 +54,8 @@
     --button-background-hover-color: #f83939;
     --button-border-color: #ef5455;
     --button-border-hover-color: #f83939;
-    --color-quote-border: #111;
-    --color-quote-citation: #6c7781;
+    --color-quote-border: #2e2c42;
+    --color-quote-citation: #475569;
 
     --color-footer-title: #111111;
     --color-footer-content: #505050;
@@ -117,4 +117,12 @@
     --bx-article-grid-title-sm: 1.5rem;
     --bx-article-grid-title-md: 1.75rem;
     --bx-article-grid-title-lg: 2.25rem;
+    /* Block styling */
+    --color-block-bg-subtle: #f8f9fa;
+    --color-code-bg: #1e1e1e;
+    --color-code-text: #f8f8f2;
+
+	@media (prefers-color-scheme: dark) {
+
+	}
 }

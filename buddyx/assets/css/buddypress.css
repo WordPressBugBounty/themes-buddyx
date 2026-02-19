@@ -55,6 +55,10 @@
 /*--------------------------------------------------------------
 # Global Buddypress Css
 --------------------------------------------------------------*/
+.buddypress .bp-navs ul {
+    margin: 0;
+}
+
 .avatar {
     aspect-ratio: 1;
     object-fit: cover;
@@ -79,9 +83,7 @@ body.bp-nouveau .entry-content {
 
 .buddypress .entry-content ol,
 .buddypress .entry-content ul {
-    margin: 0;
     padding: 0;
-    list-style: none;
 }
 
 .buddypress-wrap .select-wrap {
@@ -1414,8 +1416,12 @@ body:not(.logged-in) .activity-list.bp-list .activity-item {
     background: transparent;
     margin: 0;
     margin-bottom: 0;
-    padding: 0;
     overflow: visible;
+}
+
+.activity-list .activity-item .activity-content .activity-inner,
+.activity-list .activity-item .activity-content blockquote p {
+    padding: 0;
 }
 
 .buddypress-wrap .activity-inner {

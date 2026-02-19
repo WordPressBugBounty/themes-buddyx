@@ -265,7 +265,7 @@ function buddyx_islastFocusableElement(container, element, focusSelector) {
         return;
     }
 
-     document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function(event) {
 
         var selectors = 'input, a, button',
             elements = mobnavWrap.querySelectorAll(selectors),
@@ -275,22 +275,30 @@ function buddyx_islastFocusableElement(container, element, focusSelector) {
             activeEl = document.activeElement,
             tabKey = event.keyCode === 9,
             shiftKey = event.shiftKey;
-		
-		var firstEl_id = jQuery(activeEl).attr('id');
-		
-		if ( firstEl_id == 'menu-toggle' && jQuery('#' + firstEl_id).hasClass('menu-toggle-open') ) {			
-			closMenu.focus();
-		}
-		
-		if ( firstEl_id == 'menu-close' && !jQuery('#menu-toggle').hasClass('menu-toggle-open') ) {			
-			lastEl.focus();
-		}
-        if (!shiftKey && tabKey && lastEl === activeEl) {			
+
+        var firstEl_id = jQuery(activeEl).attr('id');
+        /*
+        console.log("======================");
+        console.log(firstEl);
+        console.log(firstEl_id + " == "+ jQuery('#' + firstEl_id).attr('class') +" == "+ jQuery('#' + firstEl_id).hasClass('focus-visible'));
+        console.log(lastEl); 
+        console.log(activeEl);
+        console.log("+++++++++++++++++++++++");
+        */
+
+        if (firstEl_id == 'menu-toggle' && jQuery('#' + firstEl_id).hasClass('menu-toggle-open')) {
+            closMenu.focus();
+        }
+
+        if (firstEl_id == 'menu-close' && !jQuery('#menu-toggle').hasClass('menu-toggle-open')) {
+            lastEl.focus();
+        }
+        if (!shiftKey && tabKey && lastEl === activeEl) {
             event.preventDefault();
             closMenu.focus();
         }
 
-        if (shiftKey && tabKey && firstEl === activeEl) {			
+        if (shiftKey && tabKey && firstEl === activeEl) {
             event.preventDefault();
             closMenu.focus();
         }
@@ -300,6 +308,6 @@ function buddyx_islastFocusableElement(container, element, focusSelector) {
             lastEl.focus();
         }
 
-    });	
+    });
 
 }());
