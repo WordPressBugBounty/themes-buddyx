@@ -29,6 +29,8 @@ if ( class_exists( 'BuddyPress' ) && $current_user_id ) {
 	global $bp;
 
 	// Create an array to store all user data we'll need.
+	$loggedin_user_domain = trailingslashit( bp_loggedin_user_domain() );
+
 	$user_data = array(
 		'messages_count'      => 0,
 		'notifications_count' => 0,
@@ -39,7 +41,7 @@ if ( class_exists( 'BuddyPress' ) && $current_user_id ) {
 	// Get messages data if component is active.
 	if ( bp_is_active( 'messages' ) ) {
 		$user_data['messages_count'] = messages_get_unread_count( $current_user_id );
-		$user_data['messages_url']   = bp_loggedin_user_domain() . bp_get_messages_slug();
+		$user_data['messages_url']   = $loggedin_user_domain . bp_get_messages_slug();
 
 		// Output messages icon with counter.
 		?>
@@ -57,7 +59,7 @@ if ( class_exists( 'BuddyPress' ) && $current_user_id ) {
 	// Get notifications data if component is active.
 	if ( bp_is_active( 'notifications' ) ) {
 		$user_data['notifications_count'] = bp_notifications_get_unread_notification_count( $current_user_id );
-		$user_data['notifications_url']   = bp_loggedin_user_domain() . $bp->notifications->slug;
+		$user_data['notifications_url']   = $loggedin_user_domain . $bp->notifications->slug;
 
 		// Output notifications with dropdown.
 		?>
@@ -96,7 +98,7 @@ if ( class_exists( 'BuddyPress' ) && $current_user_id ) {
 					</div>
 				<?php endif; ?>
 				<div class="dropdown-footer">
-					<a href="<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() . '/unread' ) ); ?>" class="button"><?php esc_html_e( 'All Notifications', 'buddyx' ); ?></a>
+						<a href="<?php echo esc_url( trailingslashit( $loggedin_user_domain . bp_get_notifications_slug() . '/unread' ) ); ?>" class="button"><?php esc_html_e( 'All Notifications', 'buddyx' ); ?></a>
 				</div>
 			</div>
 		</div>
@@ -142,8 +144,11 @@ if ( is_user_logged_in() ) {
 } else {
 	// Not logged in - show login and register buttons.
 	// Cache theme mod values to prevent multiple DB calls.
-	$login_enabled    = get_theme_mod( 'site_login_link', true );
-	$register_enabled = get_theme_mod( 'site_register_link', true );
+	// `buddyx_is_truthy()` correctly handles pre-5.1.0 'on'/'off' string
+	// values. Plain `if ($foo)` would treat the 'off' string as truthy
+	// and incorrectly render the link as enabled.
+	$login_enabled    = buddyx_is_truthy( get_theme_mod( 'site_login_link', true ) );
+	$register_enabled = buddyx_is_truthy( get_theme_mod( 'site_register_link', true ) );
 
 	if ( $login_enabled ) {
 		// Login Page URL - get once.

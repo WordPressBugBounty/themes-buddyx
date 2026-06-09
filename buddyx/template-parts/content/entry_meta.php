@@ -85,16 +85,17 @@ if ( ! empty( $post->post_parent ) && 'attachment' === get_post_type() ) {
 			$author_email  = get_the_author_meta( 'user_email', $post->post_author );
 			$avatar_markup = get_avatar( $author_email, '38' );
 
-			/* translators: %s: post author */
 			if ( $is_buddypress_active ) {
 				echo wp_kses_post( $avatar_markup );
 
 				printf(
-					_x( 'Written by %s', 'post author', 'buddyx' ),
+					/* translators: %s: post author */
+					esc_html_x( 'Written by %s', 'post author', 'buddyx' ),
 					wp_kses_post( bp_core_get_userlink( $post->post_author ) )
 				);
 			} else {
 				echo wp_kses_post( $avatar_markup );
+				/* translators: %s: post author */
 				$author_byline = _x( 'Written by %s', 'post author', 'buddyx' );
 
 				printf(
@@ -130,11 +131,8 @@ if ( ! empty( $post->post_parent ) && 'attachment' === get_post_type() ) {
 		?>
 		<span class="posted-on">
 			<?php
-			printf(
-				/* translators: %s: post date */
-				esc_html_x( '%s', 'post date', 'buddyx' ),
-				$time_string // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			);
+			// $time_string is theme-generated <time> markup; output directly.
+			echo wp_kses_post( $time_string );
 			?>
 		</span>
 		<?php
@@ -144,7 +142,7 @@ if ( ! empty( $post->post_parent ) && 'attachment' === get_post_type() ) {
 
 	<?php
 	// Edit link - only shown when needed.
-	if ( is_user_logged_in() && current_user_can( 'manage_options' ) && ! empty( $blog_edit_link ) ) {
+	if ( is_user_logged_in() && current_user_can( 'manage_options' ) && buddyx_is_truthy( $blog_edit_link ) ) {
 		edit_post_link( esc_html__( 'Edit', 'buddyx' ), '<span class="entry-edit-link">', '</span>' );
 	}
 	?>

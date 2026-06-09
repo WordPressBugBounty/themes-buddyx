@@ -1,22 +1,53 @@
 === BuddyX ===
 Contributors: wbcomdesigns
-Tags: translation-ready, Block Editor Styles, Blog, Custom Background, Custom Colors, Custom Logo, Custom Menu, Editor Style, Featured Images, Footer Widgets, Full Width Template, One Column, RTL Language Support, Sticky Post, Theme Options, Threaded Comments, Wide Blocks, BuddyPress, Post Formats, Education, E-Commerce, News
-Requires at least: 4.8
+Tags: blog, e-commerce, one-column, block-patterns, block-styles, style-variations, editor-style, custom-colors, custom-logo, featured-images, footer-widgets, theme-options
+Requires at least: 5.4
 Tested up to: 6.9
-Requires PHP: 7.4
-Stable tag: 5.0.2
+Requires PHP: 8.0
+Stable tag: 5.1.0
 License: GNU General Public License v3.0 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 
 == Description ==
-If you're looking for a theme for your community or membership website, BuddyX is the ideal choice. It offers a comprehensive solution for all types of communities. With BuddyPress & BuddyBoss Platform support, your website can feature member profiles, private messaging, group creation, and many other features.
+BuddyX is a free WordPress theme that helps you build beautiful, professional websites without writing code or buying a page builder.
 
-BuddyX is an excellent choice for various website creation needs, including business, community, and blog sites. Its impressive lightweight and scalability features make the process effortless. This free theme is fully compatible with WooCommerce, enabling you to create a visually appealing and professional digital storefront. Additionally, it supports popular LMS plugins, such as LearnDash and TutorLMS, making it the ideal solution for all your website requirements.
+Drop in ready-made layouts for your home page, about page, services, pricing, testimonials, FAQs and more - 27 designer-made sections you can mix and match. Edit the words and images in the regular WordPress editor. That's it. No Elementor licence, no Divi subscription, nothing extra to buy.
 
-Our theme offers a wide range of premium plugins and is consistently updated and maintained by Wbcom Designs. Additionally, we provide dedicated support to all of our customers.
+= What you can build =
 
-Our platform boasts numerous impressive features, including WooCommerce compatibility, responsive design, RTL and translation support, expandability with premium add-ons, and regular updates. Our team is wholly committed to the continuous development and maintenance of the platform to guarantee its reliability and optimal functionality.
+* **Business and agency websites** - hero sections, services pages, pricing tables, contact pages, team grids
+* **Online communities** - works seamlessly with BuddyPress and BuddyBoss for member profiles, groups, messaging and forums
+* **Online stores** - works with WooCommerce out of the box for products, cart, checkout and account pages
+* **Online courses** - works with LearnDash, LearnPress, LifterLMS and TutorLMS for course catalogues and lesson pages
+* **Blogs and magazines** - five different post layouts for editorial sites
+* **Portfolios and one-page sites** - clean typography that puts your work first
+
+= What's included =
+
+* **27 ready-to-use page sections** covering hero, about, services, pricing, testimonials, FAQ, calls-to-action, footers and blog post grids
+* **Two beautiful fonts** included with the theme so your site loads fast and stays GDPR-friendly (no Google Fonts cookies)
+* **Light and dark colour schemes** - one click to switch the whole site
+* **Fully responsive** - looks great on desktop, tablet and mobile
+* **Translation-ready** - use it in any language
+* **Right-to-left support** - works for Arabic, Hebrew, Persian, Urdu and other RTL languages
+* **Accessibility-tested** to WCAG 2.1 AA - keyboard friendly, screen-reader friendly, visible focus styles
+* **Lightweight** - no bloat, no jQuery dependencies in core, fast page loads
+* **Compatible with the WordPress Site Editor** - edit colours, fonts and spacing visually
+
+= Plays nicely with =
+
+WooCommerce, BuddyPress, BuddyBoss Platform, LearnDash, LearnPress, LifterLMS, TutorLMS, bbPress, The Events Calendar, Easy Digital Downloads, SureCart, FluentCart, Dokan, WC Vendors, Yoast SEO, Rank Math, Elementor, Gutenberg, and most other popular WordPress plugins.
+
+= Want even more? =
+
+[BuddyX Pro](https://wbcomdesigns.com/downloads/buddyx-pro/) adds premium starter websites you can import in one click, a drag-and-drop header and footer builder, hundreds of additional customizer options, and dedicated email support.
+
+= Need help? =
+
+* [Documentation](https://docs.wbcomdesigns.com/doc_category/buddyx/) - step-by-step guides
+* [Community support forum](https://wordpress.org/support/theme/buddyx/) - free help from the community and our team
+* [GitHub](https://github.com/vapvarun/buddyx) - report issues or contribute
 
 == BuddyX Child Theme ==
 
@@ -61,7 +92,7 @@ Source: https://fontawesome.com/
 
 scrollup v2.4.1
 Url: http://markgoodyear.com/labs/scrollup/
-Copyright (c) Mark Goodyear — @markgdyr — http://markgoodyear.com
+Copyright (c) Mark Goodyear - @markgdyr - http://markgoodyear.com
 License: MIT
 
 jQuery Superfish Menu Plugin - v1.7.10
@@ -98,6 +129,81 @@ Released under the MIT license
 
 == Changelog ==
 
+= 5.1.0 - June 2026 =
+
+Customizer framework overhaul, Site Skin design tokens, and native dark mode. All existing customizer settings carry over unchanged - no database migration.
+
+* New      - Self-contained Customizer Framework replaces the bundled Kirki dependency: 12 custom controls plus 8 core-dispatched types, extensible via the `buddyx_customizer_field_type_map` filter.
+* New      - Site Skin design-token system: `--bx-color-*` tokens cover surfaces, brand, links, headings, header, menu, buttons, footer, and copyright, fed by your saved customizer values.
+* New      - Color mode setting with light, dark, and auto options; auto follows the visitor's OS preference and a head script applies the saved choice before any CSS loads to prevent flashes.
+* New      - Dark color token set with framework defaults that pass WCAG AA contrast against dark surfaces.
+* New      - Site Skin section reorganized into 9 visual clusters (Mode & Master, Brand, Header, Surfaces, Text & Links, Headings, Buttons, Footer, Copyright); all setting IDs unchanged.
+* New      - Site Loader with 5 animation styles and full reduced-motion support; ships off by default and can be enabled under General - Site Loader.
+* New      - Typography controls expose font-style, text-align, and text-decoration in a redesigned paired layout.
+* New      - Searchable Google Fonts library picker returns to the typography controls.
+* New      - `buddyx_customizer_field_args` filter replaces `kirki_field_add_setting_args` for developers customizing field registration.
+* Improve  - Modernized typography defaults for new installs (Inter body, Newsreader headings); existing customers see no change.
+* Improve  - Legacy CSS variable aliases (`--color-*`, `--global-*`, `--button-*`) preserved for theme.json and third-party CSS; removal planned for 5.3.0.
+* Improve  - Dark mode coherence pass across 27 plugin-compat stylesheets including BuddyPress, WooCommerce, LearnDash, LifterLMS, bbPress, Dokan, and The Events Calendar.
+* Improve  - Sub Header background now ships neutral so it adapts to light and dark mode; set a fixed background via "Customize Background?" in the Sub Header section.
+* Fix      - Picking the Dark Style preset now renders the site dark by default; the visitor color-mode toggle still flips light when used.
+* Fix      - Saved typography and background values render in customizer controls again instead of blank inputs.
+* Fix      - WP color picker restored on customize.php color and background controls.
+* Fix      - Repeater and sortable controls round-trip JSON array values correctly.
+* Fix      - Typography saves no longer drop valid sub-values when unrecognized keys are present.
+* Fix      - Custom Google Font selections from older versions load again, self-hosted when "Load Google Fonts Locally" is enabled.
+* Fix      - Custom HTML control no longer strips `<hr>` and other section-divider markup.
+* Fix      - Toggle settings accept 'on', 'yes', 'true', and 'enable' values, closing a data-loss path on `site_custom_colors`, `site_breadcrumbs`, and `buddypress_avatar_style`.
+* Fix      - Members and Groups directory cards no longer output an empty cover image element when no cover photo is set.
+* Fix      - Removed a duplicate cart switch from the BuddyPress customizer section.
+* Fix      - Block palette helper classes now reference `var(--wp--preset--color--*)` so dark-mode palette overrides apply to rendered blocks.
+* Security - Removed unused @wordpress/* and React development dependencies and updated build-time tooling.
+* Dev      - Customizer fields now live under `inc/Customizer_Settings/` with the framework under `inc/Customizer_Framework/`; all Kirki includes, guards, and the TGM-PA Kirki Toolkit recommendation removed.
+* Compat   - Every existing `theme_mod` key is preserved byte-for-byte; templates and all `get_theme_mod()` call sites are unchanged.
+
+= 5.0.3 =
+**Major UI refresh and pattern library overhaul.** This release repositions BuddyX as a general-purpose, editorial-grade WordPress theme with a designer pattern library.
+
+**Breaking changes**
+* Removed pattern: `buddyx/hero-main` - pages using this pattern will lose the section. Replace with `buddyx/hero-typography-led`, `hero-split-screen`, or `hero-image-led`.
+* Removed pattern: `buddyx/hero-two` - replace with `hero-split-screen`.
+* Removed pattern: `buddyx/hero-count` - replace with `social-proof-stats`.
+* Removed pattern: `buddyx/general-banner` - replace with `cta-fullbleed` or restyled `general-banner-light`.
+* Removed pattern: `buddyx/general-features-light` - replaced by `features-alternating`.
+* Removed pattern: `buddyx/footer-default` - replaced by restyled `footer-default-mega`.
+* Pattern category taxonomy renamed: `buddyx-general` removed; new categories `buddyx-hero`, `buddyx-about`, `buddyx-features`, `buddyx-social-proof`, `buddyx-pricing-faq`, `buddyx-cta`, `buddyx-footer`, `buddyx-query`.
+
+**New - Pattern library (27 plug-and-play patterns, all WCAG AA verified)**
+* Hero: `hero-typography-led`, `hero-split-screen`, `hero-image-led`.
+* About: `about-story`, `about-founder`, `team-grid`.
+* Features: `features-alternating`, `services-grid`, `steps`, `cta-fullbleed`.
+* Social proof: `social-proof-stats`, `social-proof-testimonials`, `social-proof-logos`.
+* Pricing & FAQ: `general-pricing` (3-tier), `general-faq` (editorial accordion).
+* CTA: `general-banner-light` (asymmetric), `cta-newsletter`.
+* Footer: `footer-default-mega`, `footer-mega`, `footer-central`, `footer-simple`, `footer-small`.
+* Query (posts): `query-cover-featured`, `query-cover-grid`, `query-grid-excerpt`, `query-listbig`, `query-simple-list`.
+
+**New - Design system foundation**
+* Self-hosted **Inter** (4 weights) and **Newsreader** (3 weights) via theme.json `fontFamilies`. ~140 KB total, latin subset, woff2-only. No external font API calls.
+* Fluid 8-step type scale using `clamp()` (x-small → mega).
+* 10-step named spacing scale (`10`–`100`, ~8 px–160 px).
+* Semantic color tokens: `base`/`base-2`/`base-3`, `contrast`/`contrast-2`/`contrast-3`, `accent`/`accent-2`/`accent-3`, `surface-1`/`surface-2`/`surface-3`. WCAG AA verified `accent` (#D83734) and `accent-2` (#3A7882) on `base`.
+* 5 curated gradients (`subtle-base`, `warm-glow`, `cool-mist`, `accent-bold`, `dark-velvet`) and 2 duotones.
+* 7 block style variations: button (`outline-accent`, `link-arrow`), separator (`gradient`, `dotted`), group (`card`, `bordered`), quote (`editorial`).
+* Style variations: **Dark** (full palette flip) and **Editorial** (Newsreader-led typography).
+
+**New - Accessibility (P0)**
+* Visible keyboard focus rings via universal `:focus-visible` (2 px brand outline, offset 2 px) - WCAG 2.4.7 compliant. Mouse clicks remain ringless.
+* Converted 6 `:focus { outline: none }` rules to `:focus:not(:focus-visible)` so keyboard users always see focus.
+* Added missing `alt` attributes on 7 images (post-title-position previews, BuddyPress cover images, blog activity thumbnails).
+* Added `<label class="screen-reader-text">` and `aria-label` for TGM-PA bulk-select checkboxes.
+* Added `tabindex="-1"` alongside `aria-hidden="true"` on `.post-thumbnail` links so SR-hidden duplicates aren't keyboard-reachable.
+
+**Compatibility**
+* All 9 legacy color slugs (`primary`, `secondary`, `red`, `green`, `blue`, `yellow`, `black`, `grey`, `white`) remain registered for back-compat with existing user content.
+* Existing `larger` font-size slug (39 px) preserved; new fluid sizes are additive.
+* Theme.json schema bumped to v3.
+
 = 5.0.2 =
 * Fix: Theme disables pinch-to-zoom on mobile.
 * Fix: Select height issue with third-party plugins.
@@ -110,7 +216,7 @@ Released under the MIT license
 * Fix: Theme-check issues resolved.
 
 = 5.0.0 =
-* New: Polished styling for 65+ WordPress core blocks — every block now looks great out of the box.
+* New: Polished styling for 65+ WordPress core blocks - every block now looks great out of the box.
 * New: Refreshed default typography for a modern, readable look.
 * New: Full compatibility with WordPress 6.5+ Site Editor.
 * Enhancement: Improved gallery post slider design.
@@ -118,7 +224,7 @@ Released under the MIT license
 * Enhancement: Improved WooCommerce product page sidebar layout.
 * Enhancement: Smoother group creation steps interface.
 * Enhancement: Better blockquote styling with Elementor compatibility.
-* Enhancement: Improved BuddyBoss Platform compatibility — activity images, emoji picker, scheduled posts, and templates updated.
+* Enhancement: Improved BuddyBoss Platform compatibility - activity images, emoji picker, scheduled posts, and templates updated.
 * Fix: Post format option not showing on the Edit Post screen.
 * Fix: Full-width container template alignment issues.
 * Security: Fixed multiple security vulnerabilities including input sanitization and output escaping.

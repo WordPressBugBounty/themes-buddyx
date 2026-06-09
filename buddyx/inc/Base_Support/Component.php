@@ -7,6 +7,8 @@
 
 namespace BuddyX\Buddyx\Base_Support;
 
+require_once __DIR__ . '/block-styles.php';
+
 use BuddyX\Buddyx\Component_Interface;
 use function add_action;
 use function add_filter;
@@ -206,63 +208,25 @@ class Component implements Component_Interface {
 	 */
 	public function buddyx_register_block_pattern_categories() {
 
-		register_block_pattern_category(
-			'buddyx-general',
-			array(
-				'label' => __( 'BuddyX General', 'buddyx' ),
-			)
+		$categories = array(
+			'buddyx-hero'         => __( 'BuddyX Hero', 'buddyx' ),
+			'buddyx-about'        => __( 'BuddyX About', 'buddyx' ),
+			'buddyx-features'     => __( 'BuddyX Features', 'buddyx' ),
+			'buddyx-social-proof' => __( 'BuddyX Social Proof', 'buddyx' ),
+			'buddyx-pricing-faq'  => __( 'BuddyX Pricing & FAQ', 'buddyx' ),
+			'buddyx-cta'          => __( 'BuddyX CTA', 'buddyx' ),
+			'buddyx-footer'       => __( 'BuddyX Footer', 'buddyx' ),
+			'buddyx-query'        => __( 'BuddyX Query', 'buddyx' ),
 		);
-
-		register_block_pattern_category(
-			'buddyx-hero',
-			array(
-				'label' => __( 'BuddyX Hero Sections', 'buddyx' ),
-			)
-		);
-
-		register_block_pattern_category(
-			'buddyx-footer',
-			array(
-				'label' => __( 'BuddyX Footer', 'buddyx' ),
-			)
-		);
-
-		register_block_pattern_category(
-			'buddyx-query',
-			array(
-				'label' => __( 'BuddyX Query', 'buddyx' ),
-			)
-		);
-
-		if ( function_exists( 'register_block_pattern' ) ) {
-			$block_patterns = array(
-				'footer-default',
-				'footer-central',
-				'footer-default-mega',
-				'footer-mega',
-				'footer-simple',
-				'footer-small',
-				'general-banner',
-				'general-banner-light',
-				'general-faq',
-				'general-features-light',
-				'general-pricing',
-				'hero-main',
-				'hero-two',
-				'hero-count',
-				'query-cover-featured',
-				'query-cover-grid',
-				'query-grid-excerpt',
-				'query-listbig',
-				'query-simple-list',
-			);
-
-			foreach ( $block_patterns as $block_pattern ) {
-				register_block_pattern(
-					'buddyx/' . $block_pattern,
-					require __DIR__ . '/patterns/' . $block_pattern . '.php'
-				);
-			}
+		foreach ( $categories as $slug => $label ) {
+			register_block_pattern_category( $slug, array( 'label' => $label ) );
 		}
+
+		// Patterns themselves are auto-discovered by WP core from the theme's
+		// /patterns/ directory (WP 6.0+). Each file there carries Block Pattern
+		// header comments (Title / Slug / Categories) and is registered as
+		// `buddyx/<slug>` automatically — no PHP loop needed here. We only
+		// register the *categories* above because auto-discovery doesn't
+		// create custom categories on its own.
 	}
 }
