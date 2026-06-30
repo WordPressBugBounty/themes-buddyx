@@ -4,7 +4,7 @@ Tags: blog, e-commerce, one-column, block-patterns, block-styles, style-variatio
 Requires at least: 5.4
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 5.1.1
+Stable tag: 5.1.3
 License: GNU General Public License v3.0 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -128,6 +128,20 @@ Copyright 2013 Klaus Hartl
 Released under the MIT license
 
 == Changelog ==
+
+= 5.1.3 - June 2026 =
+
+* Fix      - Removed a broken local fonts font-collection registration that could surface a Site Editor error.
+* Fix      - Dark mode now renders correctly on BuddyBoss Platform screens.
+* Fix      - The feedback admin notice now displays correctly in dark mode.
+* Fix      - The brand button fill no longer applies to WPMediaVerse buttons.
+
+= 5.1.2 - June 2026 =
+
+* New      - Added a BuddyNext-compatible profile header section so the theme aligns with the BuddyNext layout.
+* Improve  - The chosen body font now drives the --global-font-family token, keeping typography consistent across the theme.
+* Fix      - Dark mode now renders correctly when switching from Light mode to Dark mode in the Customizer.
+* Fix      - The brand button fill no longer paints BuddyNext elements red.
 
 = 5.1.1 - June 2026 =
 
