@@ -409,9 +409,7 @@ class Component implements Component_Interface {
 											foreach ( $buddyx_family_plugins as $buddyx_family_plugin ) :
 												$buddyx_family_plugin_status    = $this->family_status( $buddyx_family_plugin );
 												$buddyx_family_plugin_is_active = ( 'active' === $buddyx_family_plugin_status );
-												$buddyx_family_plugin_base_url  = ! empty( $buddyx_family_plugin['href'] )
-													? $buddyx_family_plugin['href']
-													: 'https://wbcomdesigns.com/downloads/';
+												$buddyx_family_plugin_base_url  = $buddyx_family_plugin['href'];
 												// Minimal UTM so we can see which welcome-screen card drove the visit.
 												$buddyx_family_utm         = array(
 													'utm_source'   => 'buddyx',

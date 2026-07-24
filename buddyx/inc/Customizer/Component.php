@@ -157,16 +157,6 @@ class Component implements Component_Interface {
 			);
 		}
 
-		/**
-		 * Theme options.
-		 */
-		$wp_customize->add_section(
-			'theme_options',
-			array(
-				'title'    => __( 'Theme Options', 'buddyx' ),
-				'priority' => 130, // Before Additional CSS.
-			)
-		);
 	}
 
 	/**

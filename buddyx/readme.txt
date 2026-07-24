@@ -4,7 +4,7 @@ Tags: blog, e-commerce, one-column, block-patterns, block-styles, style-variatio
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 5.1.4
+Stable tag: 5.1.5
 License: GNU General Public License v3.0 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -128,6 +128,21 @@ Copyright 2013 Klaus Hartl
 Released under the MIT license
 
 == Changelog ==
+
+= 5.1.5 - July 2026 =
+
+* Fix      - Style presets: the color reset arrows on Body Text, H1-H6, Site Title, Tagline, Menu and Subheader controls now revert to the picked preset's color.
+* Fix      - The color picker's Default button now targets the active Style preset's color instead of the original theme default on every preset-managed control.
+* Fix      - Publishing a Style preset no longer saves the preset palette as customer settings, which made dark mode unreadable after picking a light preset and dropped the preset's fonts.
+* Fix      - The visitor dark/light toggle now renders coherent, readable colors with any Style preset published.
+* Fix      - WooCommerce shop and archive pages now honor Breadcrumbs OFF, including legacy on/off values.
+* Fix      - FluentCart cart drawer now opens from the header cart icon. A selector typo previously left the toggle inert.
+* Fix      - Footer and Sub Header background toggles now stop the saved background from rendering when switched off. The saved color returns when re-enabled.
+* Fix      - Community Settings registration is consistent when Youzify runs alongside BuddyPress. The avatar toggle no longer registers against a dropped section.
+* Fix      - Derived background color variants now compute from the correct default #f7f7f9 on sites with nothing saved.
+* Dev      - New output_condition field arg lets the customizer framework gate CSS emission on an owning toggle at render time.
+* Dev      - Typography live preview gained color parity with the PHP output builder.
+* Dev      - Removed dead customizer code: the unregistered single_post_layout body-class filter, a dead blog_layout_style read, and the empty Theme Options section.
 
 = 5.1.4 - July 2026 =
 

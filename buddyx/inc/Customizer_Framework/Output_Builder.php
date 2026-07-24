@@ -34,6 +34,13 @@ class Output_Builder {
 			if ( empty( $f['output'] ) || empty( $f['settings'] ) ) {
 				continue;
 			}
+			// An 'output_condition' callable gates emission at render time.
+			// Without it, a saved value keeps emitting CSS even after the
+			// customer disables the owning toggle (the toggle only hides the
+			// control via active_callback - it never suppressed the output).
+			if ( isset( $f['output_condition'] ) && is_callable( $f['output_condition'] ) && ! call_user_func( $f['output_condition'] ) ) {
+				continue;
+			}
 			$value = get_theme_mod( $f['settings'], $f['default'] ?? '' );
 			if ( '' === $value || is_null( $value ) ) {
 				continue;

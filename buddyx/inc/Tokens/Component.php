@@ -635,6 +635,12 @@ class Component implements Component_Interface {
 		// those spurious saves emit AFTER the style-variation overlay in :root
 		// and clobber the variation's colors. Runs once per site.
 		add_action( 'init', array( __CLASS__, 'maybe_purge_alpha_color_pollution' ), 5 );
+		// Preset-equal saves are not personalisations: strip them at publish
+		// time (and once on upgrade for sites that already published a
+		// preset) so the mode-aware token overlay stays the source of truth.
+		// Runs before register_variation_theme_mod_filters (init 20).
+		add_action( 'init', array( __CLASS__, 'maybe_purge_preset_equal_saves_once' ), 15 );
+		add_action( 'customize_save_after', array( __CLASS__, 'purge_preset_equal_saves' ), 20 );
 	}
 
 	/**
@@ -749,6 +755,134 @@ class Component implements Component_Interface {
 		if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
 			error_log( sprintf( '[BuddyX 5.1.0] alpha-color pollution purge removed %d theme_mods', $purged ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
+	}
+
+	/**
+	 * Purge saved color theme_mods that canonically equal the active Style
+	 * preset's value for that setting (or the registered field default when
+	 * no preset is active).
+	 *
+	 * Why: picking a Style preset in the customizer paints the preset's
+	 * palette into every mapped per-control color setting (so the pickers
+	 * visually reflect the preset). Publishing then persists those values as
+	 * customer theme_mods even though the customer never personalised them.
+	 * Two things break downstream:
+	 *
+	 *  1. Typography `color` sub-keys emit element-level CSS through
+	 *     Output_Builder (e.g. `body{color:#0A0A0A}`) that applies in BOTH
+	 *     color modes - a light preset then renders near-black text on the
+	 *     dark surface (and the Dark preset near-white text on light).
+	 *  2. The saves block/skew the variation theme_mod filters and clutter
+	 *     the DB with values the variation overlay already provides.
+	 *
+	 * A save that equals the preset's value is not a personalisation - the
+	 * token overlay (mode-aware) is the source of truth for it. Values that
+	 * genuinely differ from the preset are always preserved.
+	 *
+	 * Reads/writes the raw theme_mods option (NOT get_theme_mod) so the
+	 * variation theme_mod filters cannot leak injected values back into the
+	 * saved option.
+	 */
+	public static function purge_preset_equal_saves(): void {
+		$mods = \get_option( 'theme_mods_' . \get_stylesheet(), array() );
+		if ( ! is_array( $mods ) ) {
+			return;
+		}
+		$slug     = (string) ( $mods['site_style_variation'] ?? '' );
+		$baseline = array();
+		if ( '' !== $slug ) {
+			$map      = \BuddyX\Buddyx\Customizer_Framework\Component::get_style_variation_defaults();
+			$baseline = $map[ $slug ] ?? array();
+		} else {
+			// Empty "Default" preset: baseline is each field's registered
+			// default (static 5.1.0 snapshots; kept in sync with Skin_Fields).
+			$baseline = self::$alpha_color_field_defaults_5_1_0;
+			foreach ( self::$alpha_color_typography_subkey_defaults_5_1_0 as $setting => $default ) {
+				$baseline[ $setting . '[color]' ] = $default;
+			}
+		}
+		if ( array() === $baseline ) {
+			return;
+		}
+
+		$changed = false;
+		foreach ( $baseline as $setting_id => $expected ) {
+			if ( ! is_string( $expected ) || '' === $expected ) {
+				continue;
+			}
+			if ( preg_match( '/^([^\[]+)\[([^\]]+)\]$/', $setting_id, $m ) ) {
+				$parent = $m[1];
+				$key    = $m[2];
+				$saved  = $mods[ $parent ] ?? null;
+				if ( ! is_array( $saved ) || empty( $saved[ $key ] ) || ! is_string( $saved[ $key ] ) ) {
+					continue;
+				}
+				if ( self::colors_canonically_equal( $saved[ $key ], $expected ) ) {
+					unset( $saved[ $key ] );
+					if ( array() === $saved ) {
+						unset( $mods[ $parent ] );
+					} else {
+						$mods[ $parent ] = $saved;
+					}
+					$changed = true;
+				}
+			} else {
+				$saved = $mods[ $setting_id ] ?? null;
+				if ( ! is_string( $saved ) || '' === $saved ) {
+					continue;
+				}
+				if ( self::colors_canonically_equal( $saved, $expected ) ) {
+					unset( $mods[ $setting_id ] );
+					$changed = true;
+				}
+			}
+		}
+		// Typography sub-keys (font-family / weight / letter-spacing) that
+		// equal the active variation's own override are filter-provided, not
+		// customer personalisations - strip them too. Cleans rows persisted
+		// before the customize_save filter detachment existed, where a save
+		// serialized the injected variation fonts into theme_mods.
+		if ( '' !== $slug ) {
+			foreach ( self::resolve_variation_typography_overrides( $slug ) as $setting => $props ) {
+				$saved = $mods[ $setting ] ?? null;
+				if ( ! is_array( $saved ) || ! is_array( $props ) ) {
+					continue;
+				}
+				$dirty = false;
+				foreach ( $props as $key => $value ) {
+					if ( isset( $saved[ $key ] ) && is_string( $saved[ $key ] ) && trim( $saved[ $key ] ) === trim( (string) $value ) ) {
+						unset( $saved[ $key ] );
+						$dirty = true;
+					}
+				}
+				if ( $dirty ) {
+					if ( array() === $saved ) {
+						unset( $mods[ $setting ] );
+					} else {
+						$mods[ $setting ] = $saved;
+					}
+					$changed = true;
+				}
+			}
+		}
+		if ( $changed ) {
+			\update_option( 'theme_mods_' . \get_stylesheet(), $mods );
+		}
+	}
+
+	/**
+	 * One-time cleanup for sites that already published a Style preset
+	 * before the purge above existed (5.1.5). Runs before
+	 * register_variation_theme_mod_filters() (init 20) so the variation
+	 * filters see the cleaned option and correctly treat the purged
+	 * settings as unsaved.
+	 */
+	public static function maybe_purge_preset_equal_saves_once(): void {
+		if ( get_theme_mod( '_buddyx_preset_equal_purged', false ) ) {
+			return;
+		}
+		self::purge_preset_equal_saves();
+		set_theme_mod( '_buddyx_preset_equal_purged', 1 );
 	}
 
 	/**
@@ -955,7 +1089,7 @@ class Component implements Component_Interface {
 			'site_primary_color'             => array( '--bx-color-accent', '#ef5455' ),
 			'site_buttons_background_color'  => array( '--bx-color-button-bg', '#ef5455' ),
 			'site_links_color'               => array( '--bx-color-link', '#111111' ),
-			'body_background_color'          => array( '--bx-color-bg', '#ffffff' ),
+			'body_background_color'          => array( '--bx-color-bg', '#f7f7f9' ),
 			'box_background_color'           => array( '--bx-color-bg-elevated', '#ffffff' ),
 			'site_header_bg_color'           => array( '--bx-color-header-bg', '#ffffff' ),
 		);
@@ -1536,22 +1670,59 @@ class Component implements Component_Interface {
 		}
 
 		foreach ( $overrides as $setting => $variation_value ) {
-			// Customer has actively saved this setting → respect their save,
-			// do not override. Variation is a "starting point" only.
-			if ( array_key_exists( $setting, $saved_mods ) ) {
+			// Layering: field default < variation < customer save. A partial
+			// customer save (e.g. only the color sub-key persisted by a preset
+			// pick in the customizer) must NOT disable the variation's other
+			// sub-keys - skipping the whole filter on array_key_exists() used
+			// to drop the preset's fontFamily/weight the moment any sub-key
+			// was saved. $saved_raw is captured at registration because the
+			// filter callback only receives the post-default value and cannot
+			// tell a real save from the caller's default fallback.
+			$saved_raw = $saved_mods[ $setting ] ?? null;
+			if ( null !== $saved_raw && ! is_array( $variation_value ) ) {
+				// Scalar override with a real customer save: save wins outright.
 				continue;
 			}
-			\add_filter(
-				"theme_mod_{$setting}",
-				static function ( $current ) use ( $variation_value ) {
-					if ( is_array( $current ) && is_array( $variation_value ) ) {
-						return array_merge( $current, $variation_value );
-					}
-					return $variation_value;
-				},
-				5
-			);
+			$callback = static function ( $current ) use ( $variation_value, $saved_raw ) {
+				if ( is_array( $variation_value ) ) {
+					$base  = is_array( $current ) ? $current : array();
+					$saved = is_array( $saved_raw ) ? $saved_raw : array();
+					return array_merge( $base, $variation_value, $saved );
+				}
+				return $variation_value;
+			};
+			\add_filter( "theme_mod_{$setting}", $callback, 5 );
+			self::$variation_filter_handles[] = array( "theme_mod_{$setting}", $callback );
 		}
+
+		// WP_Customize_Setting builds a multidimensional root value from the
+		// FILTERED theme_mod before writing it back, so a customizer save
+		// would otherwise persist the filter-injected variation sub-keys
+		// (fontFamily/weight) as if the customer had saved them - polluting
+		// theme_mods and surviving later preset switches. Detach the filters
+		// for the duration of the save; purge_preset_equal_saves() then
+		// cleans the color sub-keys the preset pick itself dirtied.
+		\add_action( 'customize_save', array( __CLASS__, 'detach_variation_theme_mod_filters' ) );
+	}
+
+	/**
+	 * Handles of the theme_mod filters registered by
+	 * register_variation_theme_mod_filters(), as [hook, callback] pairs, so
+	 * they can be detached during a customizer save.
+	 *
+	 * @var array<int, array{0:string, 1:callable}>
+	 */
+	protected static array $variation_filter_handles = array();
+
+	/**
+	 * Remove every variation theme_mod filter (used right before the
+	 * customizer writes settings so injected values are never persisted).
+	 */
+	public static function detach_variation_theme_mod_filters(): void {
+		foreach ( self::$variation_filter_handles as $pair ) {
+			\remove_filter( $pair[0], $pair[1], 5 );
+		}
+		self::$variation_filter_handles = array();
 	}
 
 	/**
