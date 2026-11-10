@@ -3,8 +3,11 @@
  * BuddyPress - Members Single Group Invites
  *
  * @since 3.0.0
- * @version 11.0.0
+ * @version 12.0.0
+ *
+ * @package buddyx
  */
+
 ?>
 
 <h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyx' ); ?></h2>
@@ -40,15 +43,17 @@
 							<p class="meta group-details">
 								<span class="small">
 								<?php
-								printf(
-									/* translators: %s is the number of Group members */
-									_n(
-										'%s member',
-										'%s members',
-										bp_get_group_total_members( false ),
-										'buddyx'
-									),
-									number_format_i18n( bp_get_group_total_members( false ) ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo esc_html(
+									sprintf(
+										/* translators: %s is the number of Group members */
+										_n(
+											'%s member',
+											'%s members',
+											bp_get_group_total_members( false ),
+											'buddyx'
+										),
+										number_format_i18n( bp_get_group_total_members( false ) )
+									)
 								);
 								?>
 								</span>

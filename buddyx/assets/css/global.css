@@ -18,6 +18,7 @@
 # Imports
 --------------------------------------------------------------*/
 @import "_custom-properties.css";
+@import "_icons.css";
 @import "_bx-tokens.css";
 @import "_blocks-style.css";
 @import "_reset.css";
@@ -94,19 +95,27 @@ body.elementor-editor-active .site-wrapper {
 }
 
 .nav-previous a::before {
-    content: "\f104";
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+    content: "";
     display: inline-block;
+    width: 0.625em;
+    height: 1em;
+    vertical-align: -0.125em;
     margin-right: 10px;
+    background-color: currentcolor;
+    -webkit-mask: var(--bx-icon-angle-left) center / contain no-repeat;
+    mask: var(--bx-icon-angle-left) center / contain no-repeat;
 }
 
 .nav-next a::after {
-    content: "\f105";
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+    content: "";
     display: inline-block;
+    width: 0.625em;
+    height: 1em;
+    vertical-align: -0.125em;
     margin-left: 10px;
+    background-color: currentcolor;
+    -webkit-mask: var(--bx-icon-angle-right) center / contain no-repeat;
+    mask: var(--bx-icon-angle-right) center / contain no-repeat;
 }
 
 @media (--content-query) {
@@ -178,7 +187,7 @@ body.elementor-editor-active .site-wrapper {
 
 .pagination a:hover,
 .pagination a:active {
-    border-color: #00a0d2;
+    border-color: var(--bx-color-accent);
 }
 
 .pagination .prev,
@@ -234,12 +243,41 @@ were hidden (via .neverending) before. */
     overflow: hidden;
 }
 
+/* clip hides overflow without creating a scroll container, so position: sticky keeps working inside .site. */
+@supports (overflow: clip) {
+    .site {
+        overflow: clip;
+    }
+}
+
 .site-wrapper {
     margin: 1rem 0;
 }
 
 .site-wrapper #item-header {
     margin-top: -1rem;
+}
+
+/* Sticky footer. Templates that bring their own wrapper (The Events Calendar, other plugins) have no
+   .site-wrapper, so the min-height rules below never applied and a short page left blank space under
+   the footer. #page now fills the viewport (less the admin bar) and the footer takes the spare room.
+   Children keep their block width: width is set at zero specificity so any .container width still wins. */
+#page {
+    display: flex;
+    flex-direction: column;
+    /* stylelint-disable-next-line declaration-block-no-duplicate-properties -- 100vh is the fallback for browsers without dvh. */
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 0px));
+    min-height: calc(100dvh - var(--wp-admin--admin-bar--height, 0px));
+}
+
+:where(#page) > :where(:not(.skip-link)) {
+    width: 100%;
+}
+
+/* order keeps the footer last when a sibling (#primary on narrow screens) sets its own order. */
+#page > .site-footer {
+    order: 999;
+    margin-top: auto;
 }
 
 @media (min-width: 768px) {
@@ -610,4 +648,54 @@ were hidden (via .neverending) before. */
         order: 3;
         width: 100%;
     }
+}
+/* Dark mode: classic TinyMCE (wp_editor) on any front-end form - bbPress,
+ * BuddyPress Messages, Dokan, plugin forms. The editable body is an iframe
+ * painted from custom.js; this block covers the chrome, the Text tab and the
+ * menus and inline link toolbar TinyMCE appends to <body>. */
+[data-bx-mode="dark"] .wp-editor-wrap .wp-editor-container,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-tinymce,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-toolbar-grp,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-statusbar,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-menubar,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-panel,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-listbox,
+[data-bx-mode="dark"] .wp-editor-wrap .wp-switch-editor,
+[data-bx-mode="dark"] .wp-editor-wrap .quicktags-toolbar,
+[data-bx-mode="dark"] .wp-editor-wrap .wp-editor-area,
+[data-bx-mode="dark"] .mce-floatpanel,
+[data-bx-mode="dark"] .mce-inline-toolbar-grp {
+    background-color: var(--bx-color-bg-elevated) !important;
+    border-color: var(--bx-color-border) !important;
+    color: var(--bx-color-fg) !important;
+}
+
+[data-bx-mode="dark"] .wp-editor-wrap .mce-btn button,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-ico,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-statusbar .mce-path-item,
+[data-bx-mode="dark"] .wp-editor-wrap .quicktags-toolbar input[type="button"],
+[data-bx-mode="dark"] .mce-menu .mce-text,
+[data-bx-mode="dark"] .mce-inline-toolbar-grp .mce-ico {
+    color: var(--bx-color-fg) !important;
+}
+
+[data-bx-mode="dark"] .wp-editor-wrap .quicktags-toolbar input[type="button"] {
+    background-color: var(--bx-color-bg-muted) !important;
+    border-color: var(--bx-color-border) !important;
+}
+
+[data-bx-mode="dark"] .wp-editor-wrap .mce-btn:hover,
+[data-bx-mode="dark"] .wp-editor-wrap .mce-btn.mce-active,
+[data-bx-mode="dark"] .wp-editor-wrap .quicktags-toolbar input[type="button"]:hover,
+[data-bx-mode="dark"] .mce-inline-toolbar-grp .mce-btn:hover,
+[data-bx-mode="dark"] .mce-menu .mce-menu-item:hover,
+[data-bx-mode="dark"] .mce-menu .mce-menu-item:focus,
+[data-bx-mode="dark"] .mce-menu .mce-menu-item.mce-selected {
+    background-color: var(--bx-color-bg-muted) !important;
+    border-color: var(--bx-color-border-strong) !important;
+}
+
+/* WooCommerce draws cart remove links and required asterisks from --wc-red (#a00), which is 2.3:1 on the dark surface. This lives here, not in the WooCommerce sheet, because the mini cart also shows on pages where that sheet is not loaded. */
+:root[data-bx-mode="dark"] {
+    --wc-red: var(--bx-color-error);
 }

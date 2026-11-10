@@ -9,7 +9,10 @@ namespace BuddyX\Buddyx;
 
 ?>
 
-<?php do_action( 'buddyx_entry_content_before' ); ?>
+<?php
+/** This action is documented in template-parts/content/entry-full-width.php */
+do_action( 'buddyx_entry_content_before' );
+?>
 
 <div class="entry-content">
 	<?php
@@ -25,13 +28,12 @@ namespace BuddyX\Buddyx;
 						),
 					)
 				),
-				get_the_title()
+				esc_html( get_the_title() )
 			)
 		);
 	} else {
-		echo '<p>';
+		// the_excerpt() wraps its own <p>; another one around it nests paragraphs.
 		the_excerpt();
-		echo '</p>';
 	}
 	wp_link_pages(
 		array(
@@ -42,4 +44,7 @@ namespace BuddyX\Buddyx;
 	?>
 </div><!-- .entry-content -->
 
-<?php do_action( 'buddyx_entry_content_after' ); ?>
+<?php
+/** This action is documented in template-parts/content/entry-full-width.php */
+do_action( 'buddyx_entry_content_after' );
+?>

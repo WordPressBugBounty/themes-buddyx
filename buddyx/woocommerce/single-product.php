@@ -18,19 +18,22 @@
 namespace BuddyX\Buddyx;
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 get_header( 'shop' );
 
+buddyx()->print_styles( 'buddyx-content' );
+
 $woocommerce_sidebar = get_theme_mod( 'woocommerce_sidebar_option', buddyx_defaults( 'woocommerce-sidebar-option' ) );
 
+/** This action is documented in 404.php */
 do_action( 'buddyx_before_content' );
 
 if ( class_exists( 'WooCommerce' ) ) { ?>
 	<?php if ( is_woocommerce() ) { ?>
-		<?php if ( $woocommerce_sidebar == 'left' || $woocommerce_sidebar == 'both' ) : ?>
-			<aside id="secondary" class="woo-left-sidebar widget-area">
+		<?php if ( 'left' === $woocommerce_sidebar || 'both' === $woocommerce_sidebar ) : ?>
+			<aside id="secondary-left" class="woo-left-sidebar widget-area">
 				<div class="sticky-sidebar">
 					<?php buddyx()->display_woocommerce_left_sidebar(); ?>
 				</div>
@@ -41,7 +44,7 @@ if ( class_exists( 'WooCommerce' ) ) { ?>
 }
 
 /**
- * woocommerce_before_main_content hook.
+ * Hook: woocommerce_before_main_content.
  *
  * @hooked woocommerce_output_content_wrapper - 10 (outputs opening divs for the content)
  * @hooked woocommerce_breadcrumb - 20
@@ -61,7 +64,7 @@ while ( have_posts() ) :
 
 <?php
 	/**
-	 * woocommerce_after_main_content hook.
+	 * Hook: woocommerce_after_main_content.
 	 *
 	 * @hooked woocommerce_output_content_wrapper_end - 10 (outputs closing divs for the content)
 	 */
@@ -70,7 +73,7 @@ while ( have_posts() ) :
 
 <?php
 	/**
-	 * woocommerce_sidebar hook.
+	 * Hook: woocommerce_sidebar.
 	 *
 	 * @hooked woocommerce_get_sidebar - 10
 	 */
@@ -82,7 +85,7 @@ while ( have_posts() ) :
 if ( class_exists( 'WooCommerce' ) ) {
 	?>
 	<?php if ( is_woocommerce() ) { ?>
-		<?php if ( $woocommerce_sidebar == 'right' || $woocommerce_sidebar == 'both' ) : ?>
+		<?php if ( 'right' === $woocommerce_sidebar || 'both' === $woocommerce_sidebar ) : ?>
 			<aside id="secondary" class="woo-primary-sidebar widget-area">
 				<div class="sticky-sidebar">
 					<?php buddyx()->display_woocommerce_right_sidebar(); ?>
@@ -93,6 +96,7 @@ if ( class_exists( 'WooCommerce' ) ) {
 	<?php
 }
 
+/** This action is documented in 404.php */
 do_action( 'buddyx_after_content' );
 
 get_footer( 'shop' );

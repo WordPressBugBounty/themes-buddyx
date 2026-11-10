@@ -18,6 +18,7 @@ namespace BuddyX\Buddyx\Color_Mode_Toggle;
 
 use BuddyX\Buddyx\Component_Interface;
 use function add_action;
+use function class_exists;
 use function buddyx_is_truthy;
 use function get_theme_mod;
 use function wp_enqueue_script;
@@ -44,6 +45,13 @@ class Component implements Component_Interface {
 		add_action( 'buddyx_mobile_menu_actions', array( $this, 'render_mobile_toggle' ), 50 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ), 30 );
 		add_action( 'wp_footer', array( $this, 'render_dokan_dashboard_toggle' ) );
+		// LearnDash Focus Mode hides the theme header, so the header/mobile
+		// placements cannot reach it. LD's own focus-header nav hook is the
+		// render point there; it replaces the legacy `#buddyx-toggle-track`
+		// anchor and its separate bxtheme cookie + AJAX stack.
+		if ( class_exists( 'SFWD_LMS' ) ) {
+			add_action( 'learndash-focus-header-nav-after', array( $this, 'render_focus_toggle' ) );
+		}
 	}
 
 	/**
@@ -128,30 +136,46 @@ class Component implements Component_Interface {
 	}
 
 	/**
+	 * LearnDash Focus Mode header render hook.
+	 *
+	 * No position check: the theme header and mobile drawer are absent in
+	 * Focus Mode, so this placement renders whenever the toggle is enabled.
+	 * Same gate, same markup and same single persistence path as the other
+	 * placements.
+	 */
+	public function render_focus_toggle(): void {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+		$this->render( 'focus' );
+	}
+
+	/**
 	 * Render the toggle markup.
 	 *
-	 * @param string $context 'header', 'mobile' or 'dokan'.
+	 * @param string $context 'header', 'mobile', 'dokan' or 'focus'.
 	 */
 	protected function render( string $context ): void {
 		$mode     = $this->initial_mode();
 		$wrappers = array(
 			'mobile' => 'bx-color-mode-toggle-mobile',
 			'dokan'  => 'bx-color-mode-toggle-dokan',
+			'focus'  => 'bx-color-mode-toggle-header bx-color-mode-toggle-focus',
 			'header' => 'bx-color-mode-toggle-header',
 		);
 		$wrapper  = isset( $wrappers[ $context ] ) ? $wrappers[ $context ] : $wrappers['header'];
 
-		$labels = array(
-			'light' => __( 'Light mode (click to switch to dark)', 'buddyx' ),
-			'dark'  => __( 'Dark mode (click to switch to light)', 'buddyx' ),
-		);
+		$labels = $this->get_labels();
 		$label  = isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['light'];
+
+		$short_labels = $this->get_short_labels();
 		?>
 		<div class="bx-color-mode-toggle <?php echo esc_attr( $wrapper ); ?>">
 			<button type="button"
 				class="bx-color-mode-toggle__btn"
 				data-mode="<?php echo esc_attr( $mode ); ?>"
 				aria-label="<?php echo esc_attr( $label ); ?>"
+				data-label="<?php echo esc_attr( $short_labels[ $mode ] ?? '' ); ?>"
 				aria-pressed="<?php echo 'dark' === $mode ? 'true' : 'false'; ?>">
 				<svg class="bx-icon bx-icon-sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
 				<svg class="bx-icon bx-icon-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -159,6 +183,30 @@ class Component implements Component_Interface {
 			</button>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Translated button labels, shared by the markup and the toggle script.
+	 *
+	 * @return array<string, string> Label per mode.
+	 */
+	protected function get_labels(): array {
+		return array(
+			'light' => __( 'Light mode (click to switch to dark)', 'buddyx' ),
+			'dark'  => __( 'Dark mode (click to switch to light)', 'buddyx' ),
+		);
+	}
+
+	/**
+	 * Short visible labels for the mobile-menu button. The full sentence stays in aria-label.
+	 *
+	 * @return array<string, string> Label per mode.
+	 */
+	protected function get_short_labels(): array {
+		return array(
+			'light' => __( 'Light mode', 'buddyx' ),
+			'dark'  => __( 'Dark mode', 'buddyx' ),
+		);
 	}
 
 	/**
@@ -175,5 +223,8 @@ class Component implements Component_Interface {
 		$path      = $theme_dir . '/assets/js/color-mode-toggle.min.js';
 		$ver       = file_exists( $path ) ? filemtime( $path ) : $theme->get( 'Version' );
 		wp_enqueue_script( 'buddyx-color-mode-toggle', $src, array(), $ver, true );
+		// The script rewrites the button label on every mode change, so it needs the translations.
+		wp_localize_script( 'buddyx-color-mode-toggle', 'buddyxColorModeLabels', $this->get_labels() );
+		wp_localize_script( 'buddyx-color-mode-toggle', 'buddyxColorModeShortLabels', $this->get_short_labels() );
 	}
 }

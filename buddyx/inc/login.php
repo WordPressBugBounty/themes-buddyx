@@ -10,6 +10,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * URL of a page mapped in Customizer > Page Mapping, or $fallback.
+ *
+ * Only a published mapped page counts, so a draft, trashed or deleted
+ * mapping never produces a dead link.
+ *
+ * @param string $theme_mod Page-mapping theme_mod, e.g. `buddyx_login_page`.
+ * @param string $fallback  URL to use when no published page is mapped.
+ * @return string
+ */
+function buddyx_get_mapped_page_url( string $theme_mod, string $fallback ): string {
+	$mapped_id = (int) get_theme_mod( $theme_mod, 0 );
+	if ( $mapped_id > 0 && 'publish' === get_post_status( $mapped_id ) ) {
+		$url = get_permalink( $mapped_id );
+		if ( $url ) {
+			return $url;
+		}
+	}
+	return $fallback;
+}
+
+/**
  * Change login logo url
  */
 function buddyx_login_logo_url() {
@@ -114,6 +135,12 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 		$custom_login_logo_image_height = get_theme_mod( 'custom_login_logo_image_height' );
 		$custom_login_logo_space        = get_theme_mod( 'custom_login_logo_space' );
 
+		// These values land in a CSS context, where esc_attr() is not enough; re-validate as
+		// a CSS length even though the Customizer already sanitizes them on save.
+		$custom_login_logo_image_width  = \BuddyX\Buddyx\Customizer_Framework\Field::sanitize_dimension( $custom_login_logo_image_width );
+		$custom_login_logo_image_height = \BuddyX\Buddyx\Customizer_Framework\Field::sanitize_dimension( $custom_login_logo_image_height );
+		$custom_login_logo_space        = \BuddyX\Buddyx\Customizer_Framework\Field::sanitize_dimension( $custom_login_logo_space );
+
 		echo '<style>';
 
 		// `buddyx_is_truthy()` correctly recognizes 'on' / 1 / '1' / true /
@@ -139,13 +166,13 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 				width: 84px;
 				height: 84px;
 				<?php
-				if ( isset( $custom_login_logo_image_width ) && ! empty( $custom_login_logo_image_width ) ) {
+				if ( ! empty( $custom_login_logo_image_width ) ) {
 					echo 'width:' . esc_attr( $custom_login_logo_image_width ) . ';';
 				}
-				if ( isset( $custom_login_logo_image_height ) && ! empty( $custom_login_logo_image_height ) ) {
+				if ( ! empty( $custom_login_logo_image_height ) ) {
 					echo 'height:' . esc_attr( $custom_login_logo_image_height ) . ';';
 				}
-				if ( isset( $custom_login_logo_space ) && ! empty( $custom_login_logo_space ) ) {
+				if ( ! empty( $custom_login_logo_space ) ) {
 					echo 'margin-bottom:' . esc_attr( $custom_login_logo_space ) . ';';
 				}
 				?>

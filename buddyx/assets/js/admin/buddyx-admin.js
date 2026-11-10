@@ -1,29 +1,45 @@
-(function($, window, document, undefined) {
-    'use strict';
-    var tabs = document.querySelector('.buddyx-dashboard-tabs .tabs');
-    var tabButtons = tabs.querySelectorAll('.buddyx-dashboard-tabs [role="tab"]');
-    var tabPanels = Array.from(tabs.querySelectorAll('.buddyx-dashboard-tabs [role="tabpanel"]'));
+(function () {
+	'use strict';
+	const tabs = document.querySelector('.buddyx-dashboard-tabs .tabs');
 
-    function handleTabClick(event) {
-        // Hide tab panels
-        tabPanels.forEach(panel => panel.hidden = true);
+	// Nothing to wire up on a screen without the dashboard tab markup.
+	if (!tabs) {
+		return;
+	}
 
-        // Mark all tabs as unselected
-        tabButtons.forEach(tab => tab.setAttribute("aria-selected", false));
+	const tabButtons = tabs.querySelectorAll(
+		'.buddyx-dashboard-tabs [role="tab"]'
+	);
+	const tabPanels = Array.from(
+		tabs.querySelectorAll('.buddyx-dashboard-tabs [role="tabpanel"]')
+	);
 
-        // Mark the clicked tab as selected
-        event.currentTarget.setAttribute("aria-selected", true);
+	function handleTabClick(event) {
+		// Find the associated tabPanel first, so a tab without a panel leaves the screen as it was
+		const { id } = event.currentTarget;
 
-        // Find the associated tabPanel and show it
-        var { id } = event.currentTarget;
+		// Find in the array of tabPanels
+		const tabPanel = tabPanels.find(
+			(panel) => panel.getAttribute('aria-labelledby') === id
+		);
 
-        // Find in the array of tabPanels
-        var tabPanel = tabPanels.find(
-            panel => panel.getAttribute('aria-labelledby') === id
-        );
-        tabPanel.hidden = false;
-    }
+		if (!tabPanel) {
+			return;
+		}
 
-    tabButtons.forEach(button => button.addEventListener('click', handleTabClick));
+		// Hide tab panels
+		tabPanels.forEach((panel) => (panel.hidden = true));
 
-})(jQuery, window, document);
+		// Mark all tabs as unselected
+		tabButtons.forEach((tab) => tab.setAttribute('aria-selected', false));
+
+		// Mark the clicked tab as selected
+		event.currentTarget.setAttribute('aria-selected', true);
+
+		tabPanel.hidden = false;
+	}
+
+	tabButtons.forEach((button) =>
+		button.addEventListener('click', handleTabClick)
+	);
+})();

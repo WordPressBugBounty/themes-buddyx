@@ -35,10 +35,6 @@ function buddyx_get_insufficient_requirements_message() {
 		return sprintf( __( 'BuddyX requires at least PHP version %1$s. You are running version %2$s. Please update and try again.', 'buddyx' ), BUDDYX_MINIMUM_PHP_VERSION, phpversion() );
 	}
 
-	if ( buddyx_template_pack_check() ) {
-		return __( 'BuddyX requires the BuddyPress Template Pack "BP Nouveau" to be active. Please activate this Template Pack from the BuddyPress Options.', 'buddyx' );
-	}
-
 	return '';
 }
 
@@ -92,7 +88,7 @@ add_action( 'load-customize.php', 'buddyx_customize' );
  * Prevents the Theme Preview from being loaded when requirements are not met.
  */
 function buddyx_preview() {
-	// @phpcs:ignore
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check that blocks the theme preview.
 	if ( isset( $_GET['preview'] ) ) {
 		wp_die( esc_html( buddyx_get_insufficient_requirements_message() ) );
 	}

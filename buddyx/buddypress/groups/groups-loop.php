@@ -4,6 +4,8 @@
  *
  * @since 3.0.0
  * @version 7.0.0
+ *
+ * @package buddyx
  */
 
 bp_nouveau_before_loop(); ?>
@@ -26,7 +28,10 @@ bp_nouveau_before_loop(); ?>
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 			<div class="list-wrap">
 
-				<?php do_action( 'buddyx_before_group_avatar_group_directory' ); ?>
+				<?php
+				/** This action is documented in bb-buddypress/groups/groups-loop.php */
+				do_action( 'buddyx_before_group_avatar_group_directory' );
+				?>
 
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 					<div class="item-avatar">
@@ -57,7 +62,7 @@ bp_nouveau_before_loop(); ?>
 									esc_html__( 'Active %s', 'buddyx' ),
 									sprintf(
 										'<span data-livestamp="%1$s">%2$s</span>',
-										bp_core_get_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ),
+										esc_attr( bp_core_get_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ) ),
 										esc_html( bp_get_group_last_active() )
 									)
 								);

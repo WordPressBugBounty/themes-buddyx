@@ -2,30 +2,6 @@
 	"$schema": "https://schemas.wp.org/trunk/theme.json",
 	"version": 3,
 	"settings": {
-		"customTemplates": [
-			{
-				"name": "blank",
-				"postTypes": [
-					"page",
-					"post"
-				],
-				"title": "Blank"
-			},
-			{
-				"name": "blog-alternative",
-				"postTypes": [
-					"page"
-				],
-				"title": "Blog (Alternative)"
-			},
-			{
-				"name": "404",
-				"postTypes": [
-					"page"
-				],
-				"title": "404"
-			}
-		],
 		"appearanceTools": true,
 		"color": {
 			"palette": [
@@ -277,34 +253,11 @@
 					"fontFace": [
 						{
 							"fontFamily": "Inter",
-							"fontWeight": "400",
+							"fontWeight": "100 900",
 							"fontStyle": "normal",
+							"fontDisplay": "swap",
 							"src": [
-								"file:./assets/fonts/inter/Inter-Regular.woff2"
-							]
-						},
-						{
-							"fontFamily": "Inter",
-							"fontWeight": "500",
-							"fontStyle": "normal",
-							"src": [
-								"file:./assets/fonts/inter/Inter-Medium.woff2"
-							]
-						},
-						{
-							"fontFamily": "Inter",
-							"fontWeight": "600",
-							"fontStyle": "normal",
-							"src": [
-								"file:./assets/fonts/inter/Inter-SemiBold.woff2"
-							]
-						},
-						{
-							"fontFamily": "Inter",
-							"fontWeight": "700",
-							"fontStyle": "normal",
-							"src": [
-								"file:./assets/fonts/inter/Inter-Bold.woff2"
+								"file:./assets/fonts/inter/Inter-Variable.woff2"
 							]
 						}
 					]
@@ -598,27 +551,5 @@
 				}
 			}
 		}
-	},
-	"templateParts": [
-		{
-			"area": "header",
-			"name": "header",
-			"title": "Header"
-		},
-		{
-			"area": "footer",
-			"name": "footer",
-			"title": "Footer"
-		},
-		{
-			"area": "general",
-			"name": "comments",
-			"title": "Comments"
-		},
-		{
-			"area": "general",
-			"name": "post-meta",
-			"title": "Post Meta"
-		}
-	]
+	}
 }

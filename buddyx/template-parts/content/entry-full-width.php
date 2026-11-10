@@ -9,7 +9,12 @@ namespace BuddyX\Buddyx;
 
 ?>
 
-<?php do_action( 'buddyx_entry_content_before' ); ?>
+<?php
+/**
+ * Fires before the .entry-content element of a page.
+ */
+do_action( 'buddyx_entry_content_before' );
+?>
 
 <div class="entry-content">
 	<?php
@@ -41,7 +46,7 @@ namespace BuddyX\Buddyx;
 					),
 				)
 			),
-			get_the_title()
+			esc_html( get_the_title() )
 		)
 	);
 
@@ -54,4 +59,9 @@ namespace BuddyX\Buddyx;
 	?>
 </div><!-- .entry-content -->
 
-<?php do_action( 'buddyx_entry_content_after' ); ?>
+<?php
+/**
+ * Fires after the .entry-content element of a page.
+ */
+do_action( 'buddyx_entry_content_after' );
+?>
