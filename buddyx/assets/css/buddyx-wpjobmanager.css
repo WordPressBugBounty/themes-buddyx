@@ -172,3 +172,9 @@ ul.job_listings li.job_listing ul.meta li.date {
         padding: 0;
     }
 }
+/* WP Job Manager UI tokens: its ui.css sets --jm-ui-accent-color to inherit and the button label to #fff,
+   so in dark mode the Add Job button went white on white. Map them to the theme button tokens. */
+:root {
+    --jm-ui-accent-color: var(--button-background-color);
+    --jm-ui-accent-color-contrast: var(--button-text-color);
+}

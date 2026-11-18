@@ -139,6 +139,20 @@
     background-color: rgb(255, 255, 255, 0.2)
 }
 
+/* Modern lessons without focus mode: LearnDash paints the Back / Next / Back to course pills white, which left the accent link text at about 2.8:1. Give them the same dark translucent surface as focus mode. The filled Next variants and disabled links keep their look. */
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__previous-link:not([aria-disabled="true"]),
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__back-to-course-link:not([aria-disabled="true"]),
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__next-link:not([aria-disabled="true"], .ld-navigation__next-link--just-completed, .ld-navigation__next-link--no-user) {
+    background-color: rgb(255, 255, 255, 0.1);
+    color: var(--ld-color-brand-primary);
+}
+
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__previous-link:not([aria-disabled="true"]):hover,
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__back-to-course-link:not([aria-disabled="true"]):hover,
+:root[data-bx-mode="dark"] body.bx-ld-modern:not(.ld-in-focus-mode) .ld-navigation__next-link:not([aria-disabled="true"], .ld-navigation__next-link--just-completed, .ld-navigation__next-link--no-user):hover {
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
 :root[data-bx-mode="dark"] .ld-in-focus-mode .ld-breadcrumbs.ld-breadcrumbs--modern,
 :root[data-bx-mode="dark"] .ld-in-focus-mode .ld-breakpoint--small .ld-navigation,
 :root[data-bx-mode="dark"] .ld-in-focus-mode .learndash-wrapper:not(.ld-registration__outer-wrapper):not(.learndash-wrapper--modern) .ld-content-actions {
@@ -295,6 +309,41 @@
 :root[data-bx-mode="dark"] .learndash-wrapper .ld-item-list-item .ld-topic-title,
 :root[data-bx-mode="dark"] .learndash-wrapper .ld-item-list-item .ld-table-list-item-preview .ld-topic-title {
     color: var(--bx-color-fg);
+}
+
+/* The title span owns its colour, so the row's hover and focus colour never reached it. */
+:root[data-bx-mode="dark"] .learndash-wrapper a.ld-table-list-item-preview:hover .ld-topic-title,
+:root[data-bx-mode="dark"] .learndash-wrapper a.ld-table-list-item-preview:active .ld-topic-title,
+:root[data-bx-mode="dark"] .learndash-wrapper a.ld-table-list-item-preview:focus .ld-topic-title {
+    color: var(--color-theme-primary);
+}
+
+/* LearnDash Modern paints hover, expanded and field states with its light surface
+ * tokens. Redefine them for dark so every one of those states inverts together
+ * (accordion rows, secondary buttons, form fields, assignments). --ld-color-system-white
+ * is left alone: LearnDash also uses it as text colour. */
+:root[data-bx-mode="dark"] {
+    --ld-color-system-light-1: var(--bx-color-bg-elevated);
+    --ld-color-system-light-2: var(--bx-color-bg-elevated);
+    --ld-color-field-bg: var(--bx-color-bg-elevated);
+    --ld-color-field-bg-hover: var(--bx-color-bg-elevated);
+    --ld-color-field-bg-active: var(--bx-color-bg-elevated);
+    --ld-color-field-bg-valid: var(--bx-color-bg-elevated);
+    --ld-color-field-bg-error: var(--bx-color-bg-elevated);
+    --ld-color-field-bg-disabled: var(--bx-color-bg);
+}
+
+/* Assignments paint a white base from --ld-color-system-white, which stays untouched above. */
+:root[data-bx-mode="dark"] .learndash-wrapper.learndash-wrapper--modern .ld-assignments__list-item-action:not(:hover):not(:focus-visible),
+:root[data-bx-mode="dark"] .learndash-wrapper.learndash-wrapper--modern .ld-assignments__upload-form {
+    background-color: var(--bx-color-bg-elevated);
+    color: var(--bx-color-fg);
+}
+
+/* The Modern accordion title is forced to the body colour in dark, which hid LearnDash's hover colour. */
+:root[data-bx-mode="dark"] .learndash-wrapper.learndash-wrapper--modern .ld-accordion__item:hover .ld-accordion__item-title,
+:root[data-bx-mode="dark"] .learndash-wrapper.learndash-wrapper--modern .ld-accordion__item:focus-within .ld-accordion__item-title {
+    color: var(--color-theme-primary);
 }
 
 /* Course status panel (enrolled / progress): light panel and white track. */

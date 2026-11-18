@@ -39,10 +39,14 @@ function buddyx_initSubmenuEscape() {
 			return;
 		}
 		const active = e.target;
+		// Focus inside the menu wins; otherwise the innermost item under the pointer.
 		let item =
-			active && active.closest
+			(active && active.closest
 				? active.closest('.nav--toggle-sub li')
-				: null;
+				: null) ||
+			Array.from(
+				document.querySelectorAll('.nav--toggle-sub li:hover')
+			).pop();
 		// The innermost item whose dropdown is showing: the focused parent, or the parent of a focused child link.
 		while (item) {
 			const sub = item.querySelector(':scope > ul');
@@ -60,7 +64,7 @@ function buddyx_initSubmenuEscape() {
 		if (toggle) {
 			toggle.setAttribute('aria-expanded', 'false');
 		}
-		if (!item.firstElementChild.contains(active)) {
+		if (item.contains(active) && !item.firstElementChild.contains(active)) {
 			item.firstElementChild.focus();
 		}
 	});

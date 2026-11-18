@@ -831,9 +831,11 @@ class BuddyX_Breadcrumbs {
 				$this->add_rewrite_front_items();
 			}
 
-			// If there's a rewrite slug, check for parents.
-			if ( ! empty( $post_type_object->rewrite['slug'] ) ) {
-				$this->add_path_parents( $post_type_object->rewrite['slug'] );
+			// Parents come from the slug without its last segment: the last segment is the archive itself
+			// (added below), so a page that shares the archive slug is not added a second time.
+			$slug = trim( (string) $post_type_object->rewrite['slug'], '/' );
+			if ( false !== strpos( $slug, '/' ) ) {
+				$this->add_path_parents( dirname( $slug ) );
 			}
 		}
 

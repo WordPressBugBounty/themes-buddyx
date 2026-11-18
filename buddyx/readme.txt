@@ -4,7 +4,7 @@ Tags: blog, e-commerce, one-column, block-patterns, block-styles, style-variatio
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 5.2.0
+Stable tag: 5.2.1
 License: GNU General Public License v3.0 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -113,6 +113,20 @@ Kirki Customizer Framework
 License URI: https://opensource.org/licenses/MIT
 
 == Changelog ==
+
+= 5.2.1 - November 2026 =
+
+Block options, LearnDash Classic and Modern, and dark mode polish. Ships with BuddyX Pro 5.2.1.
+
+* Improve  - LearnDash Modern design: lesson and topic Previous, Next and Back links use the Theme Color, and the Modern course page, sidebar and brand colour follow the theme.
+* Improve  - Page Full Screen: block content now follows the theme content width, and wide and full alignments break out. Set a block to Full width to keep it edge to edge.
+* Improve  - Code blocks, images and featured images keep their own border colour and style from block settings.
+* Improve  - WP Job Manager buttons read their label colour from the theme button text colour.
+* Improve  - The LearnDash quiz start form and LifterLMS lessons are readable in dark mode.
+* Fix      - LearnDash progress bar and focus-mode links follow the colours set in the LearnDash Customizer instead of the theme red.
+* Fix      - The header profile link goes to the Jetonomy profile when Jetonomy is the community plugin.
+* Fix      - The Site Title link colour setting applies, and the single course meta line reads as page text.
+* Fix      - The mobile header profile avatar link has an accessible name for screen readers.
 
 = 5.2.0 - November 2026 =
 

@@ -266,10 +266,35 @@ if ( ! function_exists( 'buddyx_learndash_colors' ) ) {
 }
 add_filter( 'learndash_30_custom_colors', 'buddyx_learndash_colors' );
 
+if ( ! function_exists( 'buddyx_learndash_customizer_important' ) ) {
+	/**
+	 * Once a secondary colour is set, LearnDash prints its colour rules with !important, which beat
+	 * the LearnDash Customizer styles printed without it. Mark every Customizer style !important so
+	 * a colour the owner picks there still wins. LearnDash skips settings left at their default.
+	 *
+	 * @param array $config LearnDash Customizer config: panels > sections > controls > settings.
+	 * @return array
+	 */
+	function buddyx_learndash_customizer_important( $config ) {
+		foreach ( $config['panels'] ?? array() as $p => $panel ) {
+			foreach ( $panel['sections'] ?? array() as $s => $section ) {
+				foreach ( $section['controls'] ?? array() as $c => $control ) {
+					foreach ( array_keys( $control['settings'] ?? array() ) as $k ) {
+						$config['panels'][ $p ]['sections'][ $s ]['controls'][ $c ]['settings'][ $k ]['important'] = true;
+					}
+				}
+			}
+		}
+		return $config;
+	}
+}
+add_filter( 'learndash_customizer_config', 'buddyx_learndash_customizer_important' );
+
 if ( ! function_exists( 'buddyx_learndash_body_class' ) ) {
 	/**
-	 * Marks pages where LearnDash runs on the theme's colours, so dark mode can
-	 * lighten LearnDash's brand-coloured text without touching owner-picked colours.
+	 * Marks pages where LearnDash runs on the theme's colours (bx-ld-theme-colors), so the theme can
+	 * feed its brand to LearnDash and lighten it in dark mode without touching owner-picked colours,
+	 * and sites on LearnDash's Modern course design (bx-ld-modern).
 	 *
 	 * @param array $classes Body classes.
 	 * @return array
@@ -277,6 +302,9 @@ if ( ! function_exists( 'buddyx_learndash_body_class' ) ) {
 	function buddyx_learndash_body_class( $classes ) {
 		if ( buddyx_learndash_default_colors() ) {
 			$classes[] = 'bx-ld-theme-colors';
+		}
+		if ( function_exists( 'buddyx_ld_is_modern' ) && buddyx_ld_is_modern() ) {
+			$classes[] = 'bx-ld-modern';
 		}
 		return $classes;
 	}
@@ -286,19 +314,30 @@ add_filter( 'body_class', 'buddyx_learndash_body_class' );
 if ( ! function_exists( 'buddyx_member_url' ) ) {
 	/**
 	 * Profile URL of a member: the BuddyPress profile (BuddyPress 12+ API first, then
-	 * the older one BuddyBoss still uses), else the author archive.
+	 * the older one BuddyBoss still uses), else the Jetonomy profile, else the author archive.
 	 *
 	 * @param int $user_id User ID.
 	 * @return string
 	 */
 	function buddyx_member_url( $user_id ) {
 		if ( function_exists( 'bp_members_get_user_url' ) ) {
-			return bp_members_get_user_url( $user_id );
+			$url = bp_members_get_user_url( $user_id );
+		} elseif ( function_exists( 'bp_core_get_user_domain' ) ) {
+			$url = bp_core_get_user_domain( $user_id );
+		} elseif ( function_exists( '\Jetonomy\get_profile_url' ) && '' !== \Jetonomy\get_profile_url( (int) $user_id ) ) {
+			// Jetonomy-only community: the member's profile, not an author archive they never post to.
+			$url = \Jetonomy\get_profile_url( (int) $user_id );
+		} else {
+			$url = get_author_posts_url( $user_id );
 		}
-		if ( function_exists( 'bp_core_get_user_domain' ) ) {
-			return bp_core_get_user_domain( $user_id );
-		}
-		return get_author_posts_url( $user_id );
+
+		/**
+		 * Filters the member profile URL used by the header, menus and member lists.
+		 *
+		 * @param string $url     Profile URL.
+		 * @param int    $user_id User ID.
+		 */
+		return (string) apply_filters( 'buddyx_member_url', $url, (int) $user_id );
 	}
 }
 

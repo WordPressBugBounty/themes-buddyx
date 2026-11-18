@@ -496,18 +496,6 @@ body .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_pri
     border-radius: 100px;
 }
 
-/* Modern Layout */
-.single-sfwd-courses .learndash-wrapper.ld-layout,
-.single-groups .learndash-wrapper.ld-layout {
-    display: flex;
-    flex-direction: column-reverse;
-}
-
-.single-sfwd-courses .learndash-wrapper.ld-layout .ld-layout__header,
-.single-groups .learndash-wrapper.ld-layout .ld-layout__header {
-    order: 1;
-}
-
 /*--------------------------------------------------------------
 # Single Course
 --------------------------------------------------------------*/
@@ -769,6 +757,32 @@ html .learndash-wrapper .ld-table-list a.ld-table-list-item-preview {
     color: var(--bx-color-fg);
 }
 
+/* Modern LearnDash reads its brand from these :root tokens, not from the colour map LearnDash
+   prints for Classic. While the owner keeps LearnDash's default colours, feed it the Theme Color. */
+:root:has(body.bx-ld-theme-colors) {
+    --ld-color-primitives-blue-500: var(--bx-color-accent);
+    --ld-color-primitives-blue-800: var(--bx-color-accent-hover, var(--bx-color-accent));
+    --ld-color-brand-primary: var(--bx-color-accent);
+}
+
+/* On Modern sites, quizzes and the focus header still render Classic markup. Match Modern's
+   16px bold buttons so a course reads as one design. */
+body.bx-ld-modern .learndash-wrapper .ld-content-actions .ld-button,
+body.bx-ld-modern .learndash-wrapper .ld-content-actions .ld-content-action #learndash_mark_complete_button,
+body.bx-ld-modern .learndash-wrapper .ld-focus-header .ld-button {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* Modern's lesson and topic pager prints Previous, Next and Back links in LearnDash grey. Use the
+   brand colour Modern already reads (the Theme Color unless the owner set LearnDash colours), as the
+   quiz buttons do. The filled Next variants and disabled links keep LearnDash's look. */
+body.bx-ld-modern .ld-navigation__previous-link:not([aria-disabled="true"]),
+body.bx-ld-modern .ld-navigation__back-to-course-link:not([aria-disabled="true"]),
+body.bx-ld-modern .ld-navigation__next-link:not([aria-disabled="true"], .ld-navigation__next-link--just-completed, .ld-navigation__next-link--no-user) {
+    color: var(--ld-color-brand-primary);
+}
+
 /* LearnDash prints its brand-coloured text with !important from one colour
    (the Theme Color unless the owner picked LearnDash colours). In dark mode that
    text uses the lighter dark accent so it stays readable on dark surfaces. */
@@ -873,6 +887,13 @@ body .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem:not(.ld-s
 .course-meta .course-category {
 	font-weight: 500;
 }
+/* Single course: the meta line reads as part of the page, not a stray caption above the content card. */
+.single-sfwd-courses .course-meta {
+	margin-block-end: var(--bx-space-stack);
+	font-size: .9375rem;
+	color: var(--bx-color-fg-muted);
+}
+
 
 .course-meta .course-price {
 	font-weight: 600;
@@ -913,8 +934,11 @@ body .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem:not(.ld-s
 		max-height: 220px;
 	}
 
-	.course-resume .ld-button {
+	/* LearnDash adds a 10px start margin to this button under 640px with a four-class selector, so the class is tripled to outrank it. */
+	.course-resume .learndash-wrapper.learndash-wrapper.learndash-wrapper .ld-button {
 		width: 100%;
+		margin-inline: 0;
+		box-sizing: border-box;
 		justify-content: center;
 	}
 }
@@ -1024,6 +1048,17 @@ html[data-bx-mode="dark"] .learndash-wrapper.learndash-wrapper .ld-course-status
 
 :root[data-bx-mode="dark"] .learndash-wrapper .ld-login-modal .ld-forgot-password-link {
 	color: var(--color-link);
+}
+
+/* LearnDash stripes every second quiz form fieldset with a near-white fill. */
+:root[data-bx-mode="dark"] .learndash-wrapper .wpProQuiz_content .wpProQuiz_forms fieldset:nth-child(2n) {
+	background: transparent;
+}
+
+/* Validation message ("You must specify...") keeps LearnDash's light pink with grey text in dark mode. */
+:root[data-bx-mode="dark"] .learndash-wrapper .wpProQuiz_content .wpProQuiz_invalidate {
+    background: var(--bx-color-error-bg);
+    color: var(--bx-color-fg);
 }
 
 /* Modern layout: LearnDash's muted greys are chosen for a white page (2.1:1 on the dark surface), so lift them to the body text colour. */
@@ -1218,4 +1253,21 @@ body .learndash-wrapper.learndash-wrapper .wpProQuiz_content .wpProQuiz_question
 body .learndash-wrapper.learndash-wrapper :is(.ld-tab-content, .wpProQuiz_text, .wpProQuiz_question_text) :is(p, li, dd, td, blockquote, figcaption) a:not([class]):not(.button) {
 	text-decoration: underline;
 	text-underline-offset: 2px;
+}
+
+/* Dark focus mode greys every link to the sidebar colour; prose links keep the link colour. */
+:root[data-bx-mode="dark"] body .learndash-wrapper.learndash-wrapper :is(.ld-tab-content, .wpProQuiz_text, .wpProQuiz_question_text, .ld-focus-content) :is(p, li, dd, td, blockquote, figcaption) a:not([class]):not(.button) {
+	color: var(--bx-color-link);
+}
+
+:root[data-bx-mode="dark"] body .learndash-wrapper.learndash-wrapper :is(.ld-tab-content, .wpProQuiz_text, .wpProQuiz_question_text, .ld-focus-content) :is(p, li, dd, td, blockquote, figcaption) a:not([class]):not(.button):hover {
+	color: var(--bx-color-link-hover);
+}
+
+/* Modern focus mode: LearnDash paints the header Mark Complete button its own blue (#235af3), about 3:1 on the dark header and off the theme palette, and the label wraps to two lines. It takes the accent colour like the Back and Next links beside it and stays on one line. */
+body.bx-ld-modern.ld-in-focus-mode .ld-focus-header .learndash_mark_complete_button.ld-navigation__progress-mark-complete-button:not(:disabled),
+body.bx-ld-modern.ld-in-focus-mode .ld-focus-header .learndash_mark_complete_button.ld-navigation__progress-mark-complete-button:not(:disabled):hover,
+body.bx-ld-modern.ld-in-focus-mode .ld-focus-header .learndash_mark_complete_button.ld-navigation__progress-mark-complete-button:not(:disabled):focus-visible {
+	color: var(--ld-color-brand-primary);
+	white-space: nowrap;
 }

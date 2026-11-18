@@ -11,6 +11,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'buddyx_ld_is_modern' ) ) {
+	/**
+	 * Whether LearnDash renders a view with its Modern design (LearnDash > Settings > Design).
+	 * Lessons and topics follow the course setting; groups have their own.
+	 *
+	 * @param string $view View slug: course, lesson, topic or group.
+	 * @return bool
+	 */
+	function buddyx_ld_is_modern( $view = 'course' ) {
+		return class_exists( \LearnDash\Core\Themes\LD30\Modern\Features::class )
+			&& \LearnDash\Core\Themes\LD30\Modern\Features::enabled_for_view( (string) $view );
+	}
+}
+
 if ( ! function_exists( 'buddyx_ld_get_course_category_term' ) ) {
 	/**
 	 * First course category for a course, or null when LearnDash has the taxonomy off or the course has none.
@@ -151,8 +165,9 @@ if ( ! function_exists( 'buddyx_ld_render_course_meta' ) ) {
 			$items['lessons'] = '<span class="course-lessons">' . esc_html( sprintf( _n( '%d lesson', '%d lessons', $lessons, 'buddyx' ), $lessons ) ) . '</span>';
 		}
 
-		// A member who already has access does not need the price.
-		if ( ! sfwd_lms_has_access( $course_id, get_current_user_id() ) ) {
+		// A member who already has access does not need the price. On a single course in LearnDash
+		// Modern, LearnDash's own enrolment panel shows it, so the header would repeat it.
+		if ( ! sfwd_lms_has_access( $course_id, get_current_user_id() ) && ( $card || ! buddyx_ld_is_modern() ) ) {
 			$price = buddyx_ld_course_price_label( $course_id );
 			if ( $price ) {
 				$items['price'] = '<span class="course-price">' . esc_html( $price ) . '</span>';
@@ -277,8 +292,15 @@ if ( ! function_exists( 'buddyx_ld_render_single_course_start' ) ) {
 		if ( 100 === $percent ) {
 			return;
 		}
-		/* translators: %d: course progress percent. */
-		$label = 0 === $percent ? __( 'Start course', 'buddyx' ) : sprintf( __( 'Continue, %d%%', 'buddyx' ), $percent );
+		if ( 0 === $percent ) {
+			$label = __( 'Start course', 'buddyx' );
+		} elseif ( buddyx_ld_is_modern() ) {
+			// Modern prints its own progress box next to the button.
+			$label = __( 'Continue', 'buddyx' );
+		} else {
+			/* translators: %d: course progress percent. */
+			$label = sprintf( __( 'Continue, %d%%', 'buddyx' ), $percent );
+		}
 		echo '<div class="course-resume">' . do_shortcode( '[ld_course_resume course_id="' . (int) $course_id . '" user_id="' . (int) $user_id . '" label="' . esc_attr( $label ) . '"]' ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode output is LearnDash's own escaped markup.
 	}
 }

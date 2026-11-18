@@ -494,3 +494,48 @@ body .llms-syllabus-wrapper .llms-lesson-preview .llms-lesson-counter {
 .llms-pagination ul li .page-numbers.current {
     color: var(--color-theme-primary);
 }
+/*--------------------------------------------------------------
+# Dark mode and theme colours for LifterLMS
+--------------------------------------------------------------*/
+/* LifterLMS reads its accent from these variables (declared in :where(:root), so this wins), so the avatar ring,
+   primary buttons and links follow the Theme Color in light and dark. Same as BuddyX Pro. */
+:root {
+    --llms-color-primary: var(--button-background-color);
+    --llms-color-on-primary: var(--button-text-color);
+    --llms-color-primary-hover: var(--button-background-hover-color, var(--button-background-color));
+}
+
+.llms-lesson-preview .llms-lesson-title {
+    color: inherit;
+}
+
+:root[data-bx-mode="dark"] .llms-notification {
+    background: var(--color-theme-white-box);
+}
+
+:root[data-bx-mode="dark"] .llms-notification .llms-notification-footer {
+    border-color: var(--global-border-color);
+}
+
+:root[data-bx-mode="dark"] .llms-table tbody tr:nth-child(odd) td,
+:root[data-bx-mode="dark"] .llms-table tbody tr:nth-child(odd) th,
+:root[data-bx-mode="dark"] .llms-table tfoot tr,
+:root[data-bx-mode="dark"] .llms-sd-notification-center .llms-notification-list-item:hover .llms-notification,
+:root[data-bx-mode="dark"] .llms-instructor-info .llms-instructors .llms-author {
+    background: var(--global-body-lightcolor);
+}
+
+:root[data-bx-mode="dark"] .llms-instructor-info .llms-instructors .llms-author {
+    color: var(--global-font-color);
+}
+
+/* Locked lesson rows: LifterLMS paints them #efefef with #666 text, which stays light in dark mode. */
+:root[data-bx-mode="dark"] .llms-lesson-preview .llms-lesson-locked,
+:root[data-bx-mode="dark"] .llms-lesson-preview .llms-lesson-locked:hover {
+    background: var(--global-body-lightcolor);
+    color: var(--bx-color-fg-muted);
+}
+
+:root[data-bx-mode="dark"] .llms-lesson-preview .llms-lesson-locked .llms-lesson-link {
+    color: var(--bx-color-fg-muted);
+}

@@ -305,7 +305,8 @@ body.admin-bar .site-header-wrapper.has-sticky-header {
     }
 
     .main-navigation .primary-menu-container ul.menu li a {
-        padding: .5em 1em;
+        /* 8px floor keeps the row at the 40px tap target on a 15px menu font (.5em alone was 39px). */
+        padding: max(.5em, 8px) 1em;
         border-radius: 6px;
     }
 

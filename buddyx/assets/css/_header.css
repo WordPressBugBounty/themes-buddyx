@@ -163,6 +163,30 @@ body.buddyx-dark-style-variation .custom-logo--dark {
     .site-description {
         display: none;
     }
+
+    /* With a logo and a title side by side, the logo keeps a readable width and
+       the title is the part that gives way. */
+    .site-logo-wrapper {
+        flex: 0 1 auto;
+        min-width: 72px;
+        max-width: 100%;
+    }
+
+    .site-logo-wrapper > a {
+        margin-inline-end: 8px;
+    }
+
+    .site-branding .custom-logo-link img {
+        min-width: 72px;
+        max-width: 100%;
+        max-height: 40px;
+    }
+
+    .site-title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 nav div.wp-block-navigation__responsive-dialog {

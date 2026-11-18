@@ -1417,7 +1417,7 @@ class Component implements Component_Interface {
 		}
 		// Explicit user choice only; the "auto"/system mode was retired in 5.1.4,
 		// so there is no prefers-color-scheme media block any more.
-		return ':root[data-bx-mode="dark"]{' . $dark_decls . '}';
+		return ':root[data-bx-mode="dark"]{color-scheme:dark;' . $dark_decls . '}';
 	}
 
 	/**
